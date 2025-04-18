@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mikael's Web</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background-color: #f9fafb;
+    }
+
+    header {
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      color: #fff;
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    nav {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    nav a {
+      color: #ffffffcc;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: 0.3s;
+    }
+
+    nav a:hover {
+      color: #ffffff;
+    }
+
+    .menu-toggle {
+      display: none;
+      width: 30px;
+      height: 24px;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .menu-toggle span {
+      position: absolute;
+      height: 3px;
+      width: 100%;
+      background: #fff;
+      left: 0;
+      border-radius: 3px;
+      transition: 0.3s;
+    }
+
+    .menu-toggle span:nth-child(1) { top: 0; }
+    .menu-toggle span:nth-child(2) { top: 10px; }
+    .menu-toggle span:nth-child(3) { top: 20px; }
+
+    .menu-toggle.active span:nth-child(1) {
+      transform: rotate(45deg);
+      top: 10px;
+    }
+
+    .menu-toggle.active span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .menu-toggle.active span:nth-child(3) {
+      transform: rotate(-45deg);
+      top: 10px;
+    }
+
+    @media (max-width: 768px) {
+      nav {
+        display: none;
+        position: absolute;
+        top: 70px;
+        right: 2rem;
+        background-color: #764ba2;
+        flex-direction: column;
+        padding: 1rem;
+        border-radius: 10px;
+      }
+
+      nav.show {
+        display: flex;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+    }
+
+    .hero-image {
+      width: 100%;
+      height: 300px;
+      background: url('https://i.supa.codes/bzeIYU') center/cover no-repeat;
+      clip-path: ellipse(120% 100% at 50% 0%);
+    }
+
+    section {
+  padding: 1.5rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 900px;
+  margin: auto;
+}
+
+    .info-box {
+      padding: 2rem;
+      border-radius: 20px;
+      background: white;
+      position: relative;
+      border: 2px solid transparent;
+      background-clip: padding-box;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+    }
+
+    .info-box::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      padding: 2px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: destination-out;
+              mask-composite: exclude;
+      z-index: -1;
+    }
+
+    .info-box:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+
+    .info-box h2 {
+      font-size: 1.4rem;
+      color: #4f46e5;
+      margin-bottom: 0.5rem;
+    }
+
+    .info-box p {
+      font-size: 1rem;
+      color: #333;
+      line-height: 1.6;
+    }
+    
+    .follow-title {
+  text-align: center;
+  font-size: 2rem;
+  color: #4f46e5;
+  margin-bottom: 1.5rem;
+}
+
+.social-icons {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.social-icons a img {
+  width: 50px;
+  height: 50px;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.social-icons a img:hover {
+  transform: scale(1.2);
+  filter: brightness(1.2);
+}
+
+.school-title {
+  text-align: center;
+  font-size: 2rem;
+  color: #4f46e5;
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
+
+.school-timeline {
+  position: relative;
+  margin: 0 auto;
+  padding: 1rem 1rem 2rem;
+  max-width: 500px;
+}
+
+.school-step {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+  position: relative;
+  opacity: 0;  /* Set initial opacity for animation */
+  transform: translateY(20px); /* Initial position off-screen */
+  transition: opacity 0.6s, transform 0.6s; /* Animation duration */
+}
+
+.dot {
+  width: 20px;
+  height: 20px;
+  background-color: #4f46e5;
+  border-radius: 50%;
+  margin-right: 1rem;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.school-step::after {
+  content: '';
+  position: absolute;
+  left: 9px;
+  top: 20px;
+  width: 2px;
+  height: 100%;
+  background: #4f46e5;
+  z-index: -1;
+}
+
+.school-step:last-child::after {
+  display: none;
+}
+
+.content {
+  background: #ede9fe;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+  flex: 1;
+  transition: 0.3s;
+}
+
+.content:hover {
+  transform: translateX(5px);
+}
+
+.content h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #4f46e5;
+}
+
+.content p {
+  margin: 0.3rem 0 0;
+  color: #555;
+}
+
+.school-step.visible {
+  opacity: 1; /* Make the element visible */
+  transform: translateY(0); /* Bring it to the original position */
+}
+
+    .photo-title {
+  text-align: center;
+  font-size: 2rem;
+  color: #4f46e5;
+  margin-bottom: 1rem;
+}
+
+.photo-container {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  margin: 2rem auto;
+  border-radius: 12px;
+  background: #f3f4f6;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin-top: 1rem;
+}
+
+.photo {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 100%;
+  overflow: hidden;
+}
+
+.photo img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photo-info {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  display: flex;
+  gap: 1rem;
+  z-index: 2;
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 50px;
+  padding: 10px;
+}
+
+.like-button, .command-button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  transition: transform 0.2s ease-in-out, filter 0.2s ease-in-out;
+}
+
+.like-button:hover, .command-button:hover {
+  transform: scale(1.2);
+  filter: brightness(1.3);
+}
+
+.like-button i, .command-button i {
+  color: white;
+  font-size: 20px;
+}
+
+<style>
+  .info-box {
+    padding: 2rem;
+    border-radius: 20px;
+    background: white;
+    position: relative;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    max-width: 900px;
+    margin: 3rem auto;
+  }
+
+  .hobby-box {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .hobby-box.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .hobby-box h2 {
+    font-size: 1.5rem;
+    color: #4f46e5;
+    margin-bottom: 1rem;
+  }
+
+  .hobby-list {
+    list-style: disc;
+    padding-left: 1.5rem;
+    color: #333;
+    line-height: 1.6;
+  }
+  
+  .custom-footer {
+  background: linear-gradient(135deg, #1e1e2f, #2b2b3c);
+  color: #f0f0f0;
+  padding: 3rem 1.5rem 1.5rem;
+  font-family: 'Poppins', sans-serif;
+  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.footer-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.footer-section h2,
+.footer-section h3 {
+  margin-bottom: 0.8rem;
+  color: #ffffff;
+}
+
+.footer-section p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  opacity: 0.8;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-section ul li {
+  margin-bottom: 0.5rem;
+}
+
+.footer-section ul li a {
+  color: #ccc;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.footer-section ul li a:hover {
+  color: #ffffff;
+}
+
+.social-icons {
+  display: flex;
+  gap: 1rem;
+  font-size: 1.5rem;
+}
+
+.social-icons a {
+  color: #ccc;
+  transition: color 0.3s;
+}
+
+.social-icons a:hover {
+  color: #ffffff;
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 0.85rem;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 1rem;
+  opacity: 0.7;
+}
+
+.wa-float {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+  text-decoration: none;
+}
+
+.wa-container {
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid #25d366;
+  backdrop-filter: blur(10px);
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.wa-container:hover {
+  transform: scale(1.1);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+}
+
+.wa-icon {
+  width: 40px;
+  height: 40px;
+  stroke: #25d366;
+}
+
+.button-section {
+  margin: 3rem 2rem;
+}
+
+.section-title {
+  font-size: 1.8rem;
+  color: #4f46e5;
+  font-weight: 700;
+  margin-bottom: 1.2rem;
+  font-family: 'Segoe UI', sans-serif;
+  text-align: left;
+}
+
+.button-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.aesthetic-button {
+  flex: 1 1 calc(33.333% - 1rem); /* 3 kolom per baris dengan jarak */
+  min-width: 120px;
+  text-align: center;
+  text-decoration: none;
+  background-color: #4f46e5;
+  color: white;
+  padding: 0.75rem 2rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+}
+
+.aesthetic-button:hover {
+  background-color: #4338ca;
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 6px 18px rgba(79, 70, 229, 0.4);
+}
+</style>
+  </style>
+</head>
+
+<a href="https://wa.me/6282396700834" class="wa-float" target="_blank" aria-label="WhatsApp">
+  <div class="wa-container">
+    <svg xmlns="http://www.w3.org/2000/svg" class="wa-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21.8 13.3c-1.1 5.5-6.6 9.2-12.1 8.1-1.5-.3-2.8-.9-3.9-1.7l-3 1 1-2.9c-.9-1.1-1.4-2.4-1.7-3.9C-0.1 9.6 3.6 4.1 9.1 3c2.6-.5 5.1.1 7.1 1.5s3.5 3.5 3.9 5.9c.1.6.1 1.2.1 1.8 0 .3 0 .6-.1 1z" />
+      <path d="M16 12.5c-.2-.2-.6-.3-1.1-.5-.5-.1-.6-.2-.9.1s-1 .9-1.2 1c-.2.1-.4.1-.8-.2-.5-.2-1.7-.8-2.5-2-.3-.5-.5-.9-.3-1.1.1-.2.3-.2.5-.3.1 0 .3 0 .4-.1s.3-.3.4-.5c.1-.2.1-.3.1-.5s0-.4 0-.6c0-.2-.2-.5-.3-.7-.2-.2-.5-.5-.7-.5h-.5c-.2 0-.5 0-.7.1-.2.1-.6.2-.9.6-.2.3-.6.9-.5 1.9.1 1.1.8 2.1 1 2.3.1.1 1.4 2.1 3.4 2.9 2 .9 2 .6 2.3.6.3 0 1.2-.5 1.3-1.1.2-.6.2-1 .2-1.1 0-.1-.1-.2-.2-.3z"/>
+    </svg>
+  </div>
+</a>
+
+<body>
+
+<header>
+  <div class="container">
+    <div class="logo">Mikael's Web</div>
+    <nav id="navLinks">
+      <a href="#">Beranda</a>
+      <a href="#perjalanan">Perjalanan</a>
+      <a href="#hobby">Hobby</a>
+      <a href="#photo">Photo</a>
+      <a href="#follow">Follow Me</a>
+    </nav>
+    <div class="menu-toggle" id="menuToggle">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+</header>
+
+<div class="hero-image"></div>
+
+<section>
+  <div class="info-box">
+    <h2>Introduction</h2>
+    <p>
+      Haii! Perkenalkan, saya Mikael. Saya memiliki cita-cita untuk menjadi seorang programmer yang handal. Saat ini, saya berusia 14 tahun dan sedang mempelajari tentang coding untuk membuat website dan cyber security. Senang bertemu dengan Anda!
+    </p>
+  </div>
+  
+  <section id="perjalanan"></section>
+  <h2 class="school-title">Perjalanan</h2>
+<div class="school-timeline">
+  <div class="school-step">
+    <div class="dot"></div>
+    <div class="content">
+      <h3>SMP DON BOSCO MANADO</h3>
+      <p>2022 - 2023</p>
+    </div>
+  </div>
+
+  <div class="school-step">
+    <div class="dot"></div>
+    <div class="content">
+      <h3>SMP MANADO INDEPENDENT SCHOOL</h3>
+      <p>2023 - Sekarang</p>
+    </div>
+  </div>
+
+  <div class="school-step">
+    <div class="dot"></div>
+    <div class="content">
+      <h3>SMK 3 MANADO</h3>
+      <p>2025 - Lulus</p>
+    </div>
+  </div>
+</div>
+
+<section id="hobby"></section>
+<div class="info-box hobby-box">
+  <h2>Hobi Saya</h2>
+  <ul class="hobby-list">
+    <li>Main VollyBall</li>
+    <li>Ngoding proyek kecil menggunakan HTML, CSS, dan JavaScript</li>
+    <li>Belajar front-end dan cyber security</li>
+    <li>Likee sg dan postingan kamuu<3</li>
+  </ul>
+</div>
+
+<div class="button-section">
+  <h2 class="section-title">Workbook Answer</h2>
+  <div class="button-grid">
+    <a href="https://id.scribd.com/document/542672989/Physics-Workbook-Answers-1" class="aesthetic-button">Physics</a>
+    <a href="https://id.scribd.com/document/707986252/Cambridge-IGCSE-Chemistry-Workbook-Answers" class="aesthetic-button">Chemistry</a>
+    <a href="https://id.scribd.com/document/763493130/Igcse-Biology-Workbook-4th-Ed-Answers-by-Wendy-Studylib" class="aesthetic-button">Biology</a>
+  </div>
+</div>
+
+<!-- FontAwesome 6 CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<section id="photo"></section>
+<h2 class="photo-title">Photo</h2>
+<div class="photo-container">
+  <div class="photo">
+    <img src="https://i.supa.codes/h1t56M" alt="Photo" />
+    <div class="photo-info">
+      <!-- Ikon Like (Heart) -->
+      <button class="like-button">
+        <i class="fa-regular fa-heart"></i>
+      </button>
+      <!-- Ikon Command (Three Dots Horizontal) -->
+      <button class="command-button">
+        <i class="fa-solid fa-ellipsis"></i>
+      </button>
+    </div>
+  </div>
+</div>
+  
+  <section id="follow"></section>
+  <h2 class="follow-title">Follow Me</h2>
+<div class="social-icons">
+  <a href="https://www.tiktok.com/@user1612201010" target="_blank">
+    <img src="https://cdn-icons-png.flaticon.com/512/3046/3046121.png" alt="TikTok" />
+  </a>
+  <a href="https://www.instagram.com/mikaelpoluann_" target="_blank">
+    <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" alt="Instagram" />
+  </a>
+  <a href="https://github.com/Kaelzy16" target="_blank">
+    <img src="https://cdn-icons-png.flaticon.com/512/733/733553.png" alt="GitHub" />
+  </a>
+</div>
+</section>
+
+<footer class="custom-footer">
+  <div class="footer-container">
+    <div class="footer-section brand">
+      <h2>Mikael's Web</h2>
+      <p>Belajar Front-end dan cyber security pemula.</p>
+    </div>
+    <div class="footer-section links">
+      <h3>Navigasi</h3>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#perjalan">Perjalanan</a></li>
+        <li><a href="#hobby">Hobby</a></li>
+        <li><a href="#photo">Photo</a></li>
+        <li><a href="#follow">Follow Me</a></li>
+      </ul>
+    </div>
+    <div class="footer-section social">
+      <h3>Sosial Media</h3>
+      <div class="social-icons">
+        <a href="https://tiktok.com/@user1612201010" target="_blank" aria-label="TikTok">
+          <i class="fab fa-tiktok"></i>
+        </a>
+        <a href="https://instagram.com/mikaelpoluann_" target="_blank" aria-label="Instagram">
+          <i class="fab fa-instagram"></i>
+        </a>
+        <a href="https://github.com/Kaelzy16" target="_blank" aria-label="GitHub">
+          <i class="fab fa-github"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2025 Mikael.</p>
+  </div>
+</footer>
+
+<script>
+  const toggle = document.getElementById('menuToggle');
+  const nav = document.getElementById('navLinks');
+
+  toggle.addEventListener('click', () => {
+    toggle.classList.toggle('active');
+    nav.classList.toggle('show');
+  });
+  
+  // Function to check visibility of elements
+const steps = document.querySelectorAll('.school-step');
+
+function checkVisibility() {
+  const windowHeight = window.innerHeight;
+  steps.forEach(step => {
+    const rect = step.getBoundingClientRect();
+    if (rect.top < windowHeight && rect.bottom > 0) {
+      step.classList.add('visible');
+    } else {
+      step.classList.remove('visible');
+    }
+  });
+}
+
+// Initial check
+checkVisibility();
+
+// Event listener for scroll
+window.addEventListener('scroll', checkVisibility);
+
+let likeButton = document.querySelector('.like-button');
+let commandButton = document.querySelector('.command-button');
+
+likeButton.addEventListener('click', function () {
+  let icon = likeButton.querySelector('i');
+  if (icon.classList.contains('fa-regular')) {
+    icon.classList.remove('fa-regular');
+    icon.classList.add('fa-solid');
+    icon.style.color = '#ed4956'; // Instagram red
+  } else {
+    icon.classList.remove('fa-solid');
+    icon.classList.add('fa-regular');
+    icon.style.color = 'white';
+  }
+});
+
+commandButton.addEventListener('click', function () {
+  alert('Command button clicked!');
+});
+
+  const hobbyBox = document.querySelector('.hobby-box');
+
+  function checkHobbyVisibility() {
+    const rect = hobbyBox.getBoundingClientRect();
+    if (rect.top < window.innerHeight && rect.bottom > 0) {
+      hobbyBox.classList.add('visible');
+    } else {
+      hobbyBox.classList.remove('visible');
+    }
+  }
+
+  window.addEventListener('scroll', checkHobbyVisibility);
+  window.addEventListener('load', checkHobbyVisibility);
+</script>
+
+</body>
+</html>
