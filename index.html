@@ -608,45 +608,44 @@
 
 <div class="button-section">
   <h2 class="section-title">Workbook Answer</h2>
-  <div class="button-grid">
-    <a href="https://id.scribd.com/document/542672989/Physics-Workbook-Answers-1" class="aesthetic-button">Physics</a>
-    <a href="https://id.scribd.com/document/707986252/Cambridge-IGCSE-Chemistry-Workbook-Answers" class="aesthetic-button">Chemistry</a>
-    <a href="https://id.scribd.com/document/763493130/Igcse-Biology-Workbook-4th-Ed-Answers-by-Wendy-Studylib" class="aesthetic-button">Biology</a>
+  <div class="button-grid" id="workbookContainer">
   </div>
 </div>
+
+<div class="button-section">
+ <h2 class="section-title">Coursebook/Dll Answer</h2>
+ <div class="button-grid" id="coursebookContainer"></div>
 
 <!-- FontAwesome 6 CDN -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-<section id="photo"></section>
-<h2 class="photo-title">Photo</h2>
-<div class="photo-container">
-  <div class="photo">
-    <img src="https://i.supa.codes/h1t56M" alt="Photo" />
-    <div class="photo-info">
-      <!-- Ikon Like (Heart) -->
-      <button class="like-button">
-        <i class="fa-regular fa-heart"></i>
-      </button>
-      <!-- Ikon Command (Three Dots Horizontal) -->
-      <button class="command-button">
-        <i class="fa-solid fa-ellipsis"></i>
-      </button>
+  <section id="photo"></section>
+  <h2 class="photo-title">Photo</h2>
+  <div class="photo-container">
+    <div class="photo">
+      <img id="photo1" src="https://i.supa.codes/h1t56M" alt="Photo" />
+      <div class="photo-info">
+        <button class="like-button">
+          <i class="fa-regular fa-heart"></i>
+        </button>
+        <button class="command-button">
+          <i class="fa-solid fa-ellipsis"></i>
+        </button>
+      </div>
     </div>
   </div>
-</div>
   
-  <section id="follow"></section>
-  <h2 class="follow-title">Follow Me</h2>
+<section id="follow"></section>
+<h2 class="follow-title">Follow Me</h2>
 <div class="social-icons">
-  <a href="https://www.tiktok.com/@user1612201010" target="_blank">
-    <img src="https://cdn-icons-png.flaticon.com/512/3046/3046121.png" alt="TikTok" />
+  <a id="tt-link" href="https://www.tiktok.com/@user1612201010" target="_blank">
+    <img src="https://cdn-icons-png.flaticon.com/512/3046/3046121.png" alt="TikTok" width="40" />
   </a>
-  <a href="https://www.instagram.com/mikaelpoluann_" target="_blank">
-    <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" alt="Instagram" />
+  <a id="ig-link" href="https://www.instagram.com/mikaelpoluann_" target="_blank">
+    <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" alt="Instagram" width="40" />
   </a>
-  <a href="https://github.com/Kaelzy16" target="_blank">
-    <img src="https://cdn-icons-png.flaticon.com/512/733/733553.png" alt="GitHub" />
+  <a id="gh-link" href="https://github.com/Kaelzy16" target="_blank">
+    <img src="https://cdn-icons-png.flaticon.com/512/733/733553.png" alt="GitHub" width="40" />
   </a>
 </div>
 </section>
@@ -750,6 +749,57 @@ commandButton.addEventListener('click', function () {
 
   window.addEventListener('scroll', checkHobbyVisibility);
   window.addEventListener('load', checkHobbyVisibility);
+  
+   // Load photo dari localStorage
+    const photo1Url = localStorage.getItem('photo1');
+    if (photo1Url) {
+      document.getElementById('photo1').src = photo1Url;
+    }
+    
+      // Ganti link dari localStorage jika ada
+  const ttLink = localStorage.getItem('tt-link');
+  const igLink = localStorage.getItem('ig-link');
+  const ghLink = localStorage.getItem('gh-link');
+
+  if (ttLink) document.getElementById('tt-link').href = ttLink;
+  if (igLink) document.getElementById('ig-link').href = igLink;
+  if (ghLink) document.getElementById('gh-link').href = ghLink;
+  
+  // Untuk workbook
+ function loadWorkbookToIndex() {
+  const container = document.getElementById("workbookContainer");
+  const workbooks = JSON.parse(localStorage.getItem("workbooks") || "[]");
+  container.innerHTML = "";
+  workbooks.forEach(item => {
+    const a = document.createElement("a");
+    a.href = item.link;
+    a.className = "aesthetic-button";
+    a.textContent = item.name;
+    a.target = "_blank";
+    container.appendChild(a);
+  });
+}
+document.addEventListener("DOMContentLoaded", loadWorkbookToIndex);
+
+ // Untuk coursebook
+function loadCoursebookToIndex() {
+  const container = document.getElementById("coursebookContainer");
+  const coursebooks = JSON.parse(localStorage.getItem("coursebooks") || "[]");
+  container.innerHTML = "";
+  coursebooks.forEach(item => {
+    const a = document.createElement("a");
+    a.href = item.link;
+    a.className = "aesthetic-button";
+    a.textContent = item.name;
+    a.target = "_blank";
+    container.appendChild(a);
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  loadWorkbookToIndex();     // jika kamu sudah punya fungsi ini
+  loadCoursebookToIndex();   // ini untuk coursebook
+});
 </script>
 
 </body>
