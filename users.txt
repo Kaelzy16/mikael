@@ -1,0 +1,2 @@
+admin|12345|Admin Utama|https://via.placeholder.com/100?text=A
+user1|pass1|Pengguna Satu|https://via.placeholder.com/100?text=U1

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Akun Saya</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #3b82f6;
+      --white: #ffffff;
+      --bg: #f9fafb;
+      --text: #1f2937;
+      --text-light: #6b7280;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding-bottom: 5rem;
+    }
+    header {
+      background: var(--primary);
+      color: var(--white);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 0 0 1rem 1rem;
+    }
+    .logo {
+      font-size: 1.4rem;
+      font-weight: 700;
+    }
+    .back-btn {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--white);
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    main {
+      padding: 2rem;
+      text-align: center;
+    }
+    .profile-card {
+      background: var(--white);
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      max-width: 420px;
+      margin: auto;
+    }
+    .profile-pic {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 50%;
+      margin-bottom: 1rem;
+      border: 3px solid var(--primary);
+    }
+    .change-photo-label {
+      display: none;
+      font-size: 0.85rem;
+      color: var(--primary);
+      cursor: pointer;
+      margin-top: 0.5rem;
+    }
+    input[type="file"] {
+      display: none;
+    }
+    .username-text {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    input[type="text"] {
+      display: none;
+      padding: 0.5rem;
+      width: 80%;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+    .edit-btn, .save-btn, .logout-btn {
+      background: var(--primary);
+      color: var(--white);
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 0.5rem;
+    }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: var(--white);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      border-top: 1px solid #e5e7eb;
+      padding: 0.6rem 0;
+      box-shadow: 0 -1px 8px rgba(0, 0, 0, 0.05);
+      z-index: 10;
+    }
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 0.85rem;
+      color: var(--text-light);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    .nav-item svg {
+      width: 24px;
+      height: 24px;
+      margin-bottom: 0.2rem;
+      fill: var(--text-light);
+      transition: fill 0.3s ease, transform 0.2s;
+    }
+    .nav-item:hover svg,
+    .nav-item:focus svg {
+      fill: var(--primary);
+      transform: scale(1.15);
+    }
+    .nav-item:hover {
+      color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">Akun Saya</div>
+    <a href="dashboard.html" class="back-btn">Kembali</a>
+  </header>
+
+  <main>
+    <div class="profile-card">
+      <img src="" id="profileImage" class="profile-pic" alt="Foto Profil" />
+      <label for="photoInput" class="change-photo-label" id="photoLabel">Ubah Foto</label>
+      <input type="file" id="photoInput" accept="image/*" />
+
+      <div id="usernameDisplay" class="username-text">Pengguna</div>
+      <input type="text" id="usernameInput" />
+
+      <button class="edit-btn" onclick="enableEdit()" id="editButton">Edit Profil</button>
+      <button class="save-btn" onclick="saveProfile()" id="saveButton" style="display:none;">Simpan</button>
+      <br><br>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </main>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <a href="dashboard.html" class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9.75L12 3l9 6.75V20a1 1 0 01-1 1h-6.25a.75.75 0 01-.75-.75V14.5a.75.75 0 00-.75-.75h-2a.75.75 0 00-.75.75v5.75a.75.75 0 01-.75.75H4a1 1 0 01-1-1V9.75z"/></svg>
+      <span>Beranda</span>
+    </a>
+    <a href="#" class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v12m0 0l-4-4m4 4l4-4m-9 9h10a2 2 0 002-2v-4H5v4a2 2 0 002 2z"/></svg>
+      <span>Upload</span>
+    </a>
+    <a href="account.html" class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 12a5 5 0 100-10 5 5 0 000 10zm-7 9v-1a6 6 0 0112 0v1H5z"/></svg>
+      <span>Akun</span>
+    </a>
+  </nav>
+
+  <script>
+  if (!localStorage.getItem('loggedIn')) {
+    window.location.href = 'login.html';
+  }
+
+  const currentUser = localStorage.getItem("currentUser");
+  const usersData = JSON.parse(localStorage.getItem("usersData")) || [];
+  let user = usersData.find(u => u.username === currentUser);
+
+  if (!user) {
+    alert("Akun tidak ditemukan.");
+    window.location.href = "login.html";
+  }
+
+  const nameDisplay = document.getElementById("nameDisplay");
+  const nameInput = document.getElementById("nameInput");
+  const usernameInput = document.getElementById("usernameInput");
+  const passwordInput = document.getElementById("passwordInput");
+  const profileImage = document.getElementById("profileImage");
+  const photoInput = document.getElementById("photoInput");
+  const photoLabel = document.getElementById("photoLabel");
+  const editButton = document.getElementById("editButton");
+  const saveButton = document.getElementById("saveButton");
+
+  // Tampilkan data awal
+  nameDisplay.textContent = user.name;
+  nameInput.value = user.name;
+  usernameInput.value = user.username;
+  passwordInput.value = user.password;
+  profileImage.src = user.photo || "https://via.placeholder.com/100?text=Foto";
+
+  photoInput.addEventListener("change", () => {
+    const file = photoInput.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        profileImage.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  function enableEdit() {
+    nameDisplay.style.display = "none";
+    nameInput.style.display = "inline-block";
+    usernameInput.style.display = "inline-block";
+    passwordInput.style.display = "inline-block";
+    photoLabel.style.display = "block";
+    editButton.style.display = "none";
+    saveButton.style.display = "inline-block";
+  }
+
+  function saveProfile() {
+    const newName = nameInput.value.trim();
+    const newUsername = usernameInput.value.trim();
+    const newPassword = passwordInput.value.trim();
+    const newPhoto = profileImage.src;
+
+    if (!newName || !newUsername || !newPassword) {
+      return alert("Semua kolom wajib diisi.");
+    }
+
+    const formData = new FormData();
+    formData.append("oldUsername", currentUser);
+    formData.append("username", newUsername);
+    formData.append("password", newPassword);
+    formData.append("name", newName);
+    formData.append("photo", newPhoto);
+
+    fetch("save-profile.php", {
+      method: "POST",
+      body: formData
+    })
+    .then(res => res.text())
+    .then(res => {
+      if (res === "success") {
+        alert("Profil berhasil disimpan!");
+
+        // Update localStorage usersData
+        user.username = newUsername;
+        user.name = newName;
+        user.password = newPassword;
+        user.photo = newPhoto;
+
+        const updatedUsers = usersData.map(u =>
+          u.username === currentUser ? user : u
+        );
+
+        localStorage.setItem("usersData", JSON.stringify(updatedUsers));
+        localStorage.setItem("currentUser", newUsername);
+
+        nameDisplay.textContent = newName;
+        nameDisplay.style.display = "block";
+        nameInput.style.display = "none";
+        usernameInput.style.display = "none";
+        passwordInput.style.display = "none";
+        photoLabel.style.display = "none";
+        editButton.style.display = "inline-block";
+        saveButton.style.display = "none";
+      } else {
+        alert("Gagal menyimpan ke server.");
+      }
+    })
+    .catch(() => alert("Gagal menyimpan profil."));
+  }
+
+  function logout() {
+    localStorage.removeItem("loggedIn");
+    localStorage.removeItem("currentUser");
+    window.location.href = "login.html";
+  }
+</script>
+</body>
+</html>
