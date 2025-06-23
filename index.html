@@ -1,76 +1,298 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Selamat Datang</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --primary: #3b82f6;
-      --white: #ffffff;
-      --bg: #f0f4f8;
-      --text: #1f2937;
-      --text-light: #6b7280;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Inter', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-    }
-    header {
-      background: var(--primary);
-      color: var(--white);
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-radius: 0 0 1rem 1rem;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-    .logo { font-size: 1.5rem; font-weight: 700; }
-    .auth-links {
-      display: flex;
-      gap: 1rem;
-    }
-    .auth-links a {
-      text-decoration: none;
-      color: var(--white);
-      background: rgba(255, 255, 255, 0.1);
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      font-weight: 500;
-      transition: background 0.3s ease, transform 0.2s;
-    }
-    .auth-links a:hover {
-      background: rgba(255, 255, 255, 0.25);
-      transform: translateY(-1px);
-    }
-    main {
-      padding: 4rem 2rem;
-      text-align: center;
-    }
-    main h1 { font-size: 2.5rem; margin-bottom: 1rem; }
-    main p {
-      color: var(--text-light);
-      font-size: 1.1rem;
-      max-width: 600px;
-      margin: auto;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #3b82f6;
+  --white: #ffffff;
+  --bg: #f0f4f8;
+  --text: #1f2937;
+  --text-light: #6b7280;
+  --nav-icon-size: 24px;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  padding-bottom: 4.5rem;
+}
+header {
+  background: var(--primary);
+  color: var(--white);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 0 0 1rem 1rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+.logout-btn {
+  background: rgba(255,255,255,0.1);
+  border: none;
+  color: var(--white);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s;
+}
+.logout-btn:hover {
+  background: rgba(255,255,255,0.25);
+  transform: translateY(-1px);
+}
+main {
+  padding: 3rem 2rem 2rem;
+  text-align: center;
+}
+main h1 {
+  font-size: 2.2rem;
+  margin-bottom: 0.5rem;
+}
+main p {
+  color: var(--text-light);
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+.time {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-top: 1rem;
+}
+.running-text {
+  margin-top: 1rem;
+  color: var(--primary);
+  font-size: 1rem;
+  overflow: hidden;
+  white-space: nowrap;
+  box-sizing: border-box;
+  animation: slide 10s linear infinite;
+}
+@keyframes slide {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+.dashboard-content {
+  margin-top: 2rem;
+  text-align: left;
+}
+.card {
+  background: var(--white);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  margin-bottom: 1rem;
+}
+.card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+.card p {
+  color: var(--text-light);
+  font-size: 0.95rem;
+  margin: 0;
+}
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: var(--white);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-top: 1px solid #e5e7eb;
+  padding: 0.6rem 0;
+  box-shadow: 0 -1px 8px rgba(0,0,0,0.05);
+  z-index: 10;
+}
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.85rem;
+  color: var(--text-light);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+.nav-item svg {
+  width: var(--nav-icon-size);
+  height: var(--nav-icon-size);
+  margin-bottom: 0.2rem;
+  fill: var(--text-light);
+  transition: fill 0.3s ease, transform 0.2s;
+}
+.nav-item:hover svg,
+.nav-item:focus svg {
+  fill: var(--primary);
+  transform: scale(1.15);
+}
+.nav-item:hover {
+  color: var(--primary);
+}
+.maintenance {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  background: var(--bg);
+}
+.maintenance svg {
+  width: 80px;
+  height: 80px;
+  fill: var(--primary);
+  animation: spin 2s linear infinite;
+}
+.maintenance h2 {
+  margin-top: 1rem;
+  font-size: 1.4rem;
+}
+.maintenance p {
+  color: var(--text-light);
+  margin-top: 0.5rem;
+}
+/* Tombol Chat Admin */
+#chatBtn {
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
+  background: var(--primary);
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  cursor: pointer;
+  z-index: 20;
+}
+#chatBtn svg {
+  width: 28px;
+  height: 28px;
+  fill: #fff;
+}
+</style>
 </head>
 <body>
-  <header>
-    <div class="logo">MyWebsite</div>
-    <div class="auth-links">
-      <a href="login.html">Masuk</a>
-      <a href="#">Daftar</a>
+
+<div id="content">
+<header>
+  <div class="logo">MyDashboard</div>
+  <button class="logout-btn" onclick="logout()">Logout</button>
+</header>
+
+<main>
+  <h1 id="greeting">Haii!</h1>
+  <p id="welcome">Selamat datang di dashboard.</p>
+  <div class="time" id="clock">--:--:--</div>
+  <div class="running-text" id="runningText"></div>
+
+  <div class="dashboard-content">
+    <div class="card">
+      <h3>Statistik Hari Ini</h3>
+      <p>Kunjungan: 102 pengguna • Upload: 5 file</p>
     </div>
-  </header>
-  <main>
-    <h1>Selamat Datang!</h1>
-    <p>Silakan masuk atau daftar untuk mulai menggunakan layanan kami dengan mudah dan cepat.</p>
-  </main>
+  </div>
+</main>
+
+<nav class="bottom-nav">
+  <a href="dashboard.html" class="nav-item">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9.75L12 3l9 6.75V20a1 1 0 01-1 1h-6.25a.75.75 0 01-.75-.75V14.5h-2v5.75a.75.75 0 01-.75.75H4a1 1 0 01-1-1V9.75z"/></svg>
+    <span>Beranda</span>
+  </a>
+  <a href="upload.html" class="nav-item">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v12m0 0l-4-4m4 4l4-4m-9 9h10a2 2 0 002-2v-4H5v4a2 2 0 002 2z"/></svg>
+    <span>Upload</span>
+  </a>
+  <a href="search.html" class="nav-item">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path d="M21 21l-4.35-4.35M10 17a7 7 0 100-14 7 7 0 000 14z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span>Cari</span>
+  </a>
+  <a href="account.html" class="nav-item">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 12a5 5 0 100-10 5 5 0 000 10zm-7 9v-1a6 6 0 0112 0v1H5z"/></svg>
+    <span>Akun</span>
+  </a>
+</nav>
+</div>
+
+<!-- Tombol Chat Admin -->
+<a href="admin.html" id="chatBtn" title="Contact Admin">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="#fff" viewBox="0 0 24 24"><path d="M2 3h20v18l-4-4H2V3zm2 2v10h13.17L20 17.17V5H4z"/></svg>
+</a>
+
+<div id="maintenance" style="display:none;">
+  <div class="maintenance">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M22.7 19.3l-2.6-2.6a2 2 0 0 0-2.8 0l-1.1 1.1a7.5 7.5 0 0 1-8.5-9.9l1.3 1.3a1 1 0 0 0 1.4-1.4L9 6.4a7.5 7.5 0 0 1 9.9 8.5l-1.1 1.1a2 2 0 0 0 0 2.8l2.6 2.6a1 1 0 1 0 1.4-1.4zM12 12a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
+    </svg>
+    <h2>Mohon Maaf!</h2>
+    <p>Website sedang dalam pengembangan. Silakan kembali nanti.</p>
+  </div>
+</div>
+
+<script>
+if (!localStorage.getItem('loggedIn')) {
+  window.location.href = 'login.html';
+}
+
+const websiteStatus = localStorage.getItem("websiteStatus") || "on";
+const content = document.getElementById("content");
+const maintenance = document.getElementById("maintenance");
+
+if (websiteStatus === "off") {
+  content.style.display = "none";
+  maintenance.style.display = "flex";
+} else {
+  content.style.display = "block";
+  maintenance.style.display = "none";
+}
+
+const currentUser = localStorage.getItem('currentUser');
+const usersData = JSON.parse(localStorage.getItem('usersData')) || [];
+const user = usersData.find(u => u.username === currentUser) || { name: 'Pengguna' };
+
+function getGreeting() {
+  const hour = new Date().getHours();
+  if (hour < 12) return 'Selamat pagi';
+  if (hour < 18) return 'Selamat siang';
+  return 'Selamat malam';
+}
+
+document.getElementById('greeting').textContent = `Haii! ${user.name}, ${getGreeting()}`;
+document.getElementById('welcome').textContent = `Senang melihatmu kembali, ${user.name}.`;
+
+function updateClock() {
+  const now = new Date();
+  document.getElementById('clock').textContent = now.toLocaleTimeString('id-ID', { hour12: false });
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+const runningText = localStorage.getItem("runningText") || "";
+document.getElementById("runningText").textContent = runningText;
+
+function logout() {
+  localStorage.removeItem('loggedIn');
+  localStorage.removeItem('currentUser');
+  window.location.href = 'index.html';
+}
+</script>
+
 </body>
 </html>

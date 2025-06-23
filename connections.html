@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Connections</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f9fafb;
+      padding: 1rem;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    .user-list {
+      max-width: 420px;
+      margin: auto;
+    }
+    .user-item {
+      background: white;
+      padding: 1rem;
+      border-radius: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      text-decoration: none;
+      color: inherit;
+    }
+    .user-item img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .user-item .info {
+      flex: 1;
+    }
+    .user-item .info strong {
+      display: block;
+    }
+    .back {
+      display: inline-block;
+      margin-top: 1rem;
+      text-decoration: none;
+      background: #3b82f6;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h2 id="title">Memuat...</h2>
+  <div class="user-list" id="listContainer">Memuat data...</div>
+  <div style="text-align:center;">
+    <a href="dashboard.html" class="back">Kembali</a>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const username = params.get("username");
+    const mode = params.get("mode"); // 'followers' atau 'following'
+    const users = JSON.parse(localStorage.getItem("usersData")) || [];
+
+    const title = document.getElementById("title");
+    const container = document.getElementById("listContainer");
+
+    if (!username || !mode) {
+      title.textContent = "Parameter tidak lengkap.";
+      container.innerHTML = "<p style='text-align:center;'>Data tidak ditemukan.</p>";
+    } else {
+      title.textContent = mode === "followers" ? "Pengikut" : "Mengikuti";
+
+      let list = [];
+
+      if (mode === "followers") {
+        // Cari semua user yang mengikuti `username`
+        list = users.filter(u => {
+          const followList = JSON.parse(localStorage.getItem(`follow_${u.username}`)) || [];
+          return followList.includes(username);
+        });
+      } else {
+        // Ambil list user yang diikuti oleh `username`
+        const followList = JSON.parse(localStorage.getItem(`follow_${username}`)) || [];
+        list = users.filter(u => followList.includes(u.username));
+      }
+
+      container.innerHTML = list.length === 0
+        ? "<p style='text-align:center;'>Belum ada data.</p>"
+        : list.map(user => `
+          <a class="user-item" href="profile.html?username=${user.username}">
+            <img src="${user.photo || 'https://via.placeholder.com/100?text=Foto'}" />
+            <div class="info">
+              <strong>${user.name || 'Tanpa Nama'}</strong>
+              <small>@${user.username}</small>
+            </div>
+          </a>
+        `).join('');
+    }
+  </script>
+</body>
+</html>

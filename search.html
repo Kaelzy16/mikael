@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cari Pengguna</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #3b82f6;
+      --bg: #f9fafb;
+      --text: #1f2937;
+      --text-light: #6b7280;
+      --white: #ffffff;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding-bottom: 4.5rem;
+    }
+    header {
+      background: var(--primary);
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 0 0 1rem 1rem;
+    }
+    .logo {
+      font-size: 1.4rem;
+      font-weight: 700;
+    }
+    .back-btn {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+      text-decoration: none;
+    }
+    main {
+      padding: 2rem;
+    }
+    .search-box {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    input[type="text"] {
+      padding: 0.6rem;
+      width: 80%;
+      max-width: 400px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    .user-list {
+      display: none;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .user-card {
+      background: var(--white);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      border-radius: 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      cursor: pointer;
+    }
+    .user-card img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--primary);
+    }
+    .user-info {
+      display: flex;
+      flex-direction: column;
+    }
+    .user-info .name {
+      font-weight: 600;
+      font-size: 1rem;
+    }
+    .user-info .username {
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: var(--white);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      border-top: 1px solid #e5e7eb;
+      padding: 0.6rem 0;
+      box-shadow: 0 -1px 8px rgba(0, 0, 0, 0.05);
+      z-index: 10;
+    }
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 0.85rem;
+      color: var(--text-light);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    .nav-item svg {
+      width: 24px;
+      height: 24px;
+      margin-bottom: 0.2rem;
+      fill: var(--text-light);
+      transition: fill 0.3s ease, transform 0.2s;
+    }
+    .nav-item:hover svg,
+    .nav-item:focus svg {
+      fill: var(--primary);
+      transform: scale(1.15);
+    }
+    .nav-item:hover {
+      color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">Cari Pengguna</div>
+    <a href="dashboard.html" class="back-btn">Kembali</a>
+  </header>
+
+  <main>
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Cari pengguna..." oninput="searchUsers()" autocomplete="off"/>
+    </div>
+    <div class="user-list" id="userList"></div>
+  </main>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <a href="dashboard.html" class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9.75L12 3l9 6.75V20a1 1 0 01-1 1h-6.25a.75.75 0 01-.75-.75V14.5a.75.75 0 00-.75-.75h-2a.75.75 0 00-.75.75v5.75a.75.75 0 01-.75.75H4a1 1 0 01-1-1V9.75z"/></svg>
+      <span>Beranda</span>
+    </a>
+    <a href="#" class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v12m0 0l-4-4m4 4l4-4m-9 9h10a2 2 0 002-2v-4H5v4a2 2 0 002 2z"/></svg>
+      <span>Upload</span>
+    </a>
+    <a href="search.html" class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path d="M21 21l-4.35-4.35M10 17a7 7 0 100-14 7 7 0 000 14z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Cari</span>
+    </a>
+    <a href="account.html" class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 12a5 5 0 100-10 5 5 0 000 10zm-7 9v-1a6 6 0 0112 0v1H5z"/></svg>
+      <span>Akun</span>
+    </a>
+  </nav>
+
+  <script>
+    const userList = JSON.parse(localStorage.getItem("usersData")) || [];
+
+    function searchUsers() {
+      const keyword = document.getElementById("searchInput").value.trim().toLowerCase();
+      const container = document.getElementById("userList");
+
+      if (keyword === "") {
+        container.style.display = "none";
+        container.innerHTML = "";
+        return;
+      }
+
+      const filtered = userList.filter(u =>
+        u.username.toLowerCase().includes(keyword) || (u.name && u.name.toLowerCase().includes(keyword))
+      );
+
+      container.innerHTML = "";
+      container.style.display = "flex";
+
+      if (filtered.length === 0) {
+        container.innerHTML = "<p style='text-align:center;color:gray;'>Tidak ditemukan.</p>";
+        return;
+      }
+
+      filtered.forEach(user => {
+        const div = document.createElement("div");
+        div.className = "user-card";
+        div.onclick = () => {
+          window.location.href = `profile.html?username=${encodeURIComponent(user.username)}`;
+        };
+
+        const img = document.createElement("img");
+        img.src = user.photo || "https://via.placeholder.com/100?text=Foto";
+
+        const info = document.createElement("div");
+        info.className = "user-info";
+        info.innerHTML = `
+          <div class="name">${user.name || "Tanpa Nama"}</div>
+          <div class="username">@${user.username}</div>
+        `;
+
+        div.appendChild(img);
+        div.appendChild(info);
+        container.appendChild(div);
+      });
+    }
+  </script>
+</body>
+</html>

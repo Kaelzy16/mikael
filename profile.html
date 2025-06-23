@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Profil Pengguna</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #3b82f6;
+      --white: #ffffff;
+      --bg: #f0f4f8;
+      --text: #1f2937;
+      --text-light: #6b7280;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    header {
+      background: var(--primary);
+      color: var(--white);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-radius: 0 0 1rem 1rem;
+    }
+    .logo {
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+    .back-btn {
+      background: rgba(255,255,255,0.1);
+      padding: 0.4rem 1rem;
+      border-radius: 8px;
+      color: white;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    main {
+      padding: 2rem 1rem;
+      max-width: 600px;
+      margin: auto;
+    }
+    .profile-card {
+      text-align: center;
+      background: var(--white);
+      padding: 2rem 1rem;
+      border-radius: 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+    .profile-pic {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 3px solid var(--primary);
+      object-fit: cover;
+      margin-bottom: 1rem;
+    }
+    .name {
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+    .username {
+      color: var(--text-light);
+      margin-bottom: 1rem;
+    }
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin: 1rem 0;
+    }
+    .stats div {
+      text-align: center;
+      cursor: pointer;
+      min-width: 80px;
+    }
+    .stats strong {
+      display: block;
+      font-size: 1.2rem;
+    }
+    .follow-btn {
+      background: var(--primary);
+      color: white;
+      padding: 0.5rem 1.4rem;
+      border-radius: 8px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .follow-btn:hover {
+      background: #2563eb;
+    }
+    .posts {
+      margin-top: 2rem;
+    }
+    .post-item {
+      background: white;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">Profil Pengguna</div>
+    <a href="dashboard.html" class="back-btn">Kembali</a>
+  </header>
+
+  <main>
+    <div class="profile-card">
+      <img id="profilePic" class="profile-pic" src="" alt="Foto Profil" />
+      <div class="name" id="name">Nama</div>
+      <div class="username" id="username">@username</div>
+
+      <div class="stats">
+        <div onclick="goTo('posts')">
+          <strong id="postCount">0</strong>
+          Post
+        </div>
+        <div onclick="goTo('followers')">
+          <strong id="followersCount">0</strong>
+          Pengikut
+        </div>
+        <div onclick="goTo('following')">
+          <strong id="followingCount">0</strong>
+          Mengikuti
+        </div>
+      </div>
+
+      <button id="followBtn" class="follow-btn">Follow</button>
+    </div>
+
+    <div class="posts" id="posts">
+      <!-- Postingan akan ditampilkan di sini -->
+    </div>
+  </main>
+
+  <script>
+    const params = new URLSearchParams(location.search);
+    const targetUser = params.get("username");
+    const currentUser = localStorage.getItem("currentUser");
+
+    const users = JSON.parse(localStorage.getItem("usersData")) || [];
+    const user = users.find(u => u.username === targetUser);
+
+    if (!user) {
+      document.body.innerHTML = "<p style='text-align:center'>Pengguna tidak ditemukan.</p>";
+      throw new Error("Pengguna tidak ditemukan");
+    }
+
+    document.getElementById("profilePic").src = user.photo || "https://via.placeholder.com/100?text=Foto";
+    document.getElementById("name").textContent = user.name;
+    document.getElementById("username").textContent = `@${user.username}`;
+
+    const followers = users.filter(u => {
+      const following = JSON.parse(localStorage.getItem(`follow_${u.username}`)) || [];
+      return following.includes(user.username);
+    });
+
+    const following = JSON.parse(localStorage.getItem(`follow_${user.username}`)) || [];
+    const postList = JSON.parse(localStorage.getItem(`posts_${user.username}`)) || [];
+
+    document.getElementById("followersCount").textContent = followers.length;
+    document.getElementById("followingCount").textContent = following.length;
+    document.getElementById("postCount").textContent = postList.length;
+
+    const postsContainer = document.getElementById("posts");
+    postsContainer.innerHTML = postList.length
+      ? postList.map(post => `<div class="post-item">${post}</div>`).join("")
+      : "<p style='text-align:center;color:#888;'>Belum ada postingan.</p>";
+
+    const followBtn = document.getElementById("followBtn");
+    if (currentUser === user.username) {
+      followBtn.style.display = "none";
+    } else {
+      const myFollow = JSON.parse(localStorage.getItem(`follow_${currentUser}`)) || [];
+      followBtn.textContent = myFollow.includes(user.username) ? "Unfollow" : "Follow";
+    }
+
+    followBtn.onclick = () => {
+      let myFollow = JSON.parse(localStorage.getItem(`follow_${currentUser}`)) || [];
+      const isFollowing = myFollow.includes(user.username);
+      if (isFollowing) {
+        myFollow = myFollow.filter(u => u !== user.username);
+      } else {
+        myFollow.push(user.username);
+      }
+      localStorage.setItem(`follow_${currentUser}`, JSON.stringify(myFollow));
+      location.reload();
+    };
+
+    function goTo(mode) {
+      if (mode === 'posts') return;
+      location.href = `connections.html?username=${user.username}&mode=${mode}`;
+    }
+  </script>
+</body>
+</html>

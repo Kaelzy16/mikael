@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Upload Postingan</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #3b82f6;
+      --white: #ffffff;
+      --bg: #f0f4f8;
+      --text: #1f2937;
+      --text-light: #6b7280;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding-bottom: 6rem;
+      margin: 0;
+    }
+    header {
+      background: var(--primary);
+      color: var(--white);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 0 0 1rem 1rem;
+    }
+    .logo {
+      font-size: 1.3rem;
+      font-weight: bold;
+    }
+    main {
+      padding: 2rem;
+      max-width: 500px;
+      margin: auto;
+    }
+    input[type="file"] {
+      display: block;
+      margin-bottom: 1rem;
+    }
+    .preview-img {
+      max-width: 100%;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+    }
+    textarea {
+      width: 100%;
+      padding: 0.8rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      resize: vertical;
+      min-height: 100px;
+    }
+    .post-btn {
+      background: var(--primary);
+      color: var(--white);
+      padding: 0.8rem 2rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      width: 100%;
+    }
+
+    .suggestions {
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-top: -1rem;
+      max-height: 150px;
+      overflow-y: auto;
+      position: absolute;
+      z-index: 999;
+      width: calc(100% - 4rem);
+    }
+    .suggestions div {
+      padding: 0.5rem;
+      cursor: pointer;
+    }
+    .suggestions div:hover {
+      background: #f3f4f6;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: var(--white);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      border-top: 1px solid #e5e7eb;
+      padding: 0.6rem 0;
+      z-index: 10;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 0.85rem;
+      color: var(--text-light);
+      text-decoration: none;
+    }
+    .nav-item svg {
+      width: 24px;
+      height: 24px;
+      fill: var(--text-light);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">Upload Post</div>
+  </header>
+
+  <main>
+    <input type="file" accept="image/*,video/*" id="mediaInput">
+    <img id="preview" class="preview-img" style="display:none;" />
+    <textarea id="captionInput" placeholder="Tulis caption, gunakan #tag dan tandai dengan @username..."></textarea>
+    <div id="suggestions" class="suggestions" style="display:none;"></div>
+    <button class="post-btn" onclick="submitPost()">Bagikan</button>
+  </main>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <a href="dashboard.html" class="nav-item">
+      <svg viewBox="0 0 24 24"><path d="M3 9.75L12 3l9 6.75V20a1 1 0 01-1 1h-6.25a.75.75 0 01-.75-.75V14.5h-2v5.75a.75.75 0 01-.75.75H4a1 1 0 01-1-1V9.75z"/></svg>
+      <span>Beranda</span>
+    </a>
+    <a href="upload.html" class="nav-item">
+      <svg viewBox="0 0 24 24"><path d="M12 3v12m0 0l-4-4m4 4l4-4m-9 9h10a2 2 0 002-2v-4H5v4a2 2 0 002 2z"/></svg>
+      <span>Upload</span>
+    </a>
+    <a href="account.html" class="nav-item">
+      <svg viewBox="0 0 24 24"><path d="M12 12a5 5 0 10-10 0 5 5 0 0010 0zm-7 9v-1a6 6 0 0112 0v1H5z"/></svg>
+      <span>Akun</span>
+    </a>
+  </nav>
+
+  <script>
+    const currentUser = localStorage.getItem("currentUser");
+    const mediaInput = document.getElementById("mediaInput");
+    const preview = document.getElementById("preview");
+    const captionInput = document.getElementById("captionInput");
+    const suggestions = document.getElementById("suggestions");
+
+    const usersData = JSON.parse(localStorage.getItem("usersData")) || [];
+    const following = JSON.parse(localStorage.getItem("following")) || {};
+    const followingList = following[currentUser] || [];
+
+    mediaInput.addEventListener("change", () => {
+      const file = mediaInput.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+          preview.src = e.target.result;
+          preview.style.display = "block";
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    captionInput.addEventListener("input", () => {
+      const cursorPos = captionInput.selectionStart;
+      const textBeforeCursor = captionInput.value.slice(0, cursorPos);
+      const atIndex = textBeforeCursor.lastIndexOf("@");
+
+      if (atIndex !== -1) {
+        const query = textBeforeCursor.slice(atIndex + 1).toLowerCase();
+        if (query.length > 0) {
+          const matches = usersData
+            .filter(user => followingList.includes(user.username) && user.username.toLowerCase().includes(query))
+            .map(user => `<div onclick="insertMention('${user.username}', ${atIndex}, ${cursorPos})">@${user.username}</div>`)
+            .join("");
+          suggestions.innerHTML = matches;
+          suggestions.style.display = "block";
+        } else {
+          suggestions.style.display = "none";
+        }
+      } else {
+        suggestions.style.display = "none";
+      }
+    });
+
+    function insertMention(username, start, end) {
+      const text = captionInput.value;
+      captionInput.value = text.slice(0, start) + "@" + username + " " + text.slice(end);
+      suggestions.style.display = "none";
+      captionInput.focus();
+    }
+
+    function submitPost() {
+      const file = mediaInput.files[0];
+      if (!file) return alert("Pilih file media terlebih dahulu.");
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const posts = JSON.parse(localStorage.getItem("posts")) || [];
+        posts.push({
+          username: currentUser,
+          media: e.target.result,
+          caption: captionInput.value,
+          time: Date.now()
+        });
+        localStorage.setItem("posts", JSON.stringify(posts));
+        alert("Postingan berhasil diunggah!");
+        location.href = "account.html";
+      };
+      reader.readAsDataURL(file);
+    }
+  </script>
+</body>
+</html>

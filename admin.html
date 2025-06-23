@@ -1,0 +1,235 @@
+<!DOCTYPE html><html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+/* Tetap sama */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #1e1e2f;
+  color: #fff;
+}
+header {
+  background: #121220;
+  padding: 15px 20px;
+  display: flex;
+  align-items: center;
+  height: 60px;
+}
+.menu-toggle {
+  font-size: 24px;
+  cursor: pointer;
+  color: white;
+  border: none;
+  background: none;
+  display: none;
+}
+aside#sidebar {
+  width: 220px;
+  background: #151529;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+}
+aside .logo {
+  color: white;
+  font-size: 22px;
+  font-weight: bold;
+  padding: 0 20px 20px;
+}
+aside nav a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  color: white;
+  text-decoration: none;
+  transition: background 0.3s;
+}
+aside nav a:hover {
+  background: #2ecc71;
+  color: black;
+}
+.content {
+  margin-left: 220px;
+  padding: 20px;
+}
+.section { display: none; }
+.section.active { display: block; }
+h2 { font-size: 22px; margin-top: 20px; margin-bottom: 10px; }
+.form-group { margin-bottom: 15px; }
+input[type="url"], input[type="text"] {
+  width: 100%; padding: 8px; border: none; border-radius: 5px; font-size: 14px;
+}
+button {
+  padding: 10px 20px;
+  background: #00b894;
+  border: none;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+}
+button:hover { background: #019875; }
+.account-list, .chat-list {
+  margin-top: 20px;
+}
+.account-item, .chat-item {
+  background: #2b2b44;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+.chat-window {
+  background: #2b2b44;
+  padding: 10px;
+  border-radius: 6px;
+  margin-top: 20px;
+}
+#chatMessages {
+  height: 200px;
+  overflow-y: auto;
+  background: #1a1a2f;
+  padding: 8px;
+  margin-bottom: 10px;
+}
+#chatMessages div {
+  margin-bottom: 6px;
+}
+@media (max-width: 768px) {
+  .content { margin-left: 0; }
+  aside#sidebar {
+    position: absolute;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+  aside#sidebar.show { transform: translateX(0); }
+  .menu-toggle { display: block; margin-left: auto; }
+}
+</style>
+</head>
+<body>
+<header>
+  <button class="menu-toggle" onclick="toggleMenu()">
+    <i class="fa fa-bars"></i>
+  </button>
+</header>
+<aside id="sidebar">
+  <div class="logo">Admin Panel</div>
+  <nav>
+    <a href="#" onclick="showSection('status')"><i class="fa fa-toggle-on"></i> Status Website</a>
+    <a href="#" onclick="showSection('statistik')"><i class="fa fa-chart-line"></i> Statistik</a>
+    <a href="#" onclick="showSection('index')"><i class="fa fa-newspaper"></i> Index</a>
+    <a href="#" onclick="showSection('runningTextSection')"><i class="fa fa-font"></i> Dashboard</a>
+    <a href="#" onclick="showSection('chats')"><i class="fa fa-comments"></i> Chats</a>
+  </nav>
+</aside>
+<div class="content">
+  <div id="status" class="section active">
+    <h2>Status Website</h2>
+    <input type="checkbox" id="toggleStatus"> Aktif
+  </div>
+  <div id="statistik" class="section">
+    <h2>Statistik Akun</h2>
+    <canvas id="accountChart" height="100"></canvas>
+    <div id="accountList" class="account-list"></div>
+  </div>
+  <div id="index" class="section">
+    <h2>Informasi Halaman Utama</h2>
+    <input id="textInput" type="text" placeholder="Teks">
+    <input id="imageInput" type="url" placeholder="URL Gambar">
+    <input id="videoInput" type="url" placeholder="URL Video">
+    <button onclick="addInfo()">Tambah</button>
+    <div id="infoList" class="account-list"></div>
+  </div>
+  <div id="runningTextSection" class="section">
+    <h2>Teks Berjalan</h2>
+    <input id="runningTextInput" type="text">
+    <button onclick="saveRunningText()">Simpan</button>
+    <button onclick="deleteRunningText()">Hapus</button>
+  </div>
+  <div id="chats" class="section">
+    <h2>Pesan Pengguna</h2>
+    <div id="chatList" class="chat-list"></div>
+    <div id="chatWindow" class="chat-window" style="display:none">
+      <h3 id="chatTitle"></h3>
+      <div id="chatMessages"></div>
+      <input id="replyInput" type="text" placeholder="Balas...">
+      <button onclick="sendReply()">Kirim</button>
+    </div>
+  </div>
+</div>
+<script>
+function toggleMenu() {
+  document.getElementById("sidebar").classList.toggle("show");
+}
+function showSection(id) {
+  document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  if (id === 'chats') loadChats();
+}
+const toggleStatus = document.getElementById("toggleStatus");
+toggleStatus.checked = localStorage.getItem("websiteStatus") !== "off";
+toggleStatus.onchange = () => localStorage.setItem("websiteStatus", toggleStatus.checked ? "on" : "off");
+function addInfo() {
+  const list = JSON.parse(localStorage.getItem("homeInfoList") || "[]");
+  list.push({ text: textInput.value, image: imageInput.value, video: videoInput.value, waktu: new Date().toLocaleString() });
+  localStorage.setItem("homeInfoList", JSON.stringify(list));
+  showInfoList();
+}
+function showInfoList() {
+  const list = JSON.parse(localStorage.getItem("homeInfoList") || "[]");
+  infoList.innerHTML = list.map((x,i)=>`<div class='account-item'>${x.text} - ${x.image} - ${x.video} <button onclick='deleteInfo(${i})'>Hapus</button></div>`).join("");
+}
+function deleteInfo(i) {
+  const list = JSON.parse(localStorage.getItem("homeInfoList") || "[]");
+  list.splice(i,1);
+  localStorage.setItem("homeInfoList", JSON.stringify(list));
+  showInfoList();
+}
+function saveRunningText() {
+  localStorage.setItem("runningText", runningTextInput.value);
+}
+function deleteRunningText() {
+  localStorage.removeItem("runningText");
+  runningTextInput.value = "";
+}
+function loadChats() {
+  const chats = JSON.parse(localStorage.getItem("userChats") || "{}");
+  chatList.innerHTML = Object.keys(chats).map(u=>`<div class='chat-item' onclick='openChat("${u}")'>${u}</div>`).join("");
+}
+function openChat(user) {
+  const chats = JSON.parse(localStorage.getItem("userChats") || "{}");
+  chatWindow.style.display = "block";
+  chatWindow.dataset.user = user;
+  chatTitle.textContent = `Chat dengan ${user}`;
+  chatMessages.innerHTML = (chats[user]||[]).map(m=>`<div><b>${m.from}:</b> ${m.text}</div>`).join("");
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+function sendReply() {
+  const user = chatWindow.dataset.user;
+  const msg = replyInput.value.trim();
+  if (!msg) return;
+  const chats = JSON.parse(localStorage.getItem("userChats") || "{}");
+  chats[user] = chats[user] || [];
+  chats[user].push({ from: "Admin", text: msg });
+  localStorage.setItem("userChats", JSON.stringify(chats));
+  openChat(user);
+  replyInput.value = "";
+}
+document.addEventListener("DOMContentLoaded", () => {
+  showInfoList();
+  runningTextInput.value = localStorage.getItem("runningText") || "";
+});
+</script>
+</body>
+</html>
