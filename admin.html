@@ -6,7 +6,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-/* Tetap seperti sebelumnya */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   font-family: 'Segoe UI', sans-serif;
@@ -133,7 +132,15 @@ button:hover { background: #019875; }
   padding: 10px;
   border-radius: 6px;
   margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   cursor: pointer;
+}
+.chat-item img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
 }
 .chat-window {
   margin-top: 20px;
@@ -150,6 +157,15 @@ button:hover { background: #019875; }
 }
 #chatMessages div {
   margin-bottom: 6px;
+}
+.back-btn {
+  margin-bottom: 10px;
+  background: #00b894;
+  border: none;
+  padding: 5px 10px;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
 }
 @media (max-width: 768px) {
   .content { margin-left: 0; }
@@ -225,6 +241,7 @@ button:hover { background: #019875; }
     <h2>Pesan Pengguna</h2>
     <div class="chat-list" id="chatList"></div>
     <div class="chat-window" id="chatWindow" style="display:none;">
+      <button class="back-btn" onclick="closeChat()">Kembali</button>
       <h3 id="chatTitle"></h3>
       <div id="chatMessages"></div>
       <input type="text" id="replyInput" placeholder="Balas...">
@@ -295,7 +312,10 @@ function deleteRunningText() {
 }
 function loadChats() {
   const chats = JSON.parse(localStorage.getItem("userChats")||"{}");
-  chatList.innerHTML = Object.keys(chats).map(u=>`<div class="chat-item" onclick="openChat('${u}')">${u}</div>`).join("");
+  chatList.innerHTML = Object.keys(chats).map(u=>`<div class="chat-item" onclick="openChat('${u}')">
+    <img src="https://via.placeholder.com/40" alt="Foto">
+    <div>${u}</div>
+  </div>`).join("");
 }
 function openChat(user) {
   const chats = JSON.parse(localStorage.getItem("userChats")||"{}");
@@ -304,6 +324,9 @@ function openChat(user) {
   chatWindow.dataset.user = user;
   chatMessages.innerHTML = (chats[user]||[]).map(m=>`<div><b>${m.from}:</b> ${m.text}</div>`).join("");
   chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+function closeChat() {
+  chatWindow.style.display = "none";
 }
 function sendReply() {
   const user = chatWindow.dataset.user;
