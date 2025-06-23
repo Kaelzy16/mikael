@@ -1,5 +1,4 @@
-<!DOCTYPE html><html lang="id">
-<head>
+<!DOCTYPE html><html lang="id"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Panel</title>
@@ -52,10 +51,21 @@ aside nav a {
   color: white;
   text-decoration: none;
   transition: background 0.3s;
+  position: relative;
 }
 aside nav a:hover {
   background: #2ecc71;
   color: black;
+}
+.badge {
+  background: red;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 12px;
+  position: absolute;
+  top: 8px;
+  right: 15px;
 }
 .content {
   margin-left: 220px;
@@ -192,7 +202,9 @@ button:hover { background: #019875; }
     <a href="#" onclick="showSection('statistik')"><i class="fa fa-chart-line"></i> Statistik</a>
     <a href="#" onclick="showSection('index')"><i class="fa fa-newspaper"></i> Index</a>
     <a href="#" onclick="showSection('runningTextSection')"><i class="fa fa-font"></i> Dashboard</a>
-    <a href="#" onclick="showSection('chats')"><i class="fa fa-comments"></i> Chats</a>
+    <a href="#" onclick="showSection('chats')">
+      <i class="fa fa-comments"></i> Chats <span id="notifBadge" class="badge" style="display:none;">0</span>
+    </a>
   </nav>
 </aside>
 <div class="content">
@@ -256,6 +268,7 @@ function toggleMenu() {
 function showSection(id) {
   document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
+  if (id === "chats") updateNotifBadge(0);
 }
 const toggleStatus = document.getElementById("toggleStatus");
 toggleStatus.checked = localStorage.getItem("websiteStatus") !== "off";
@@ -291,9 +304,9 @@ function deleteInfo(i) {
 function showStatistics() {
   const users = JSON.parse(localStorage.getItem("usersData")||"[]");
   totalAccounts.textContent = users.length;
-  activeAccounts.textContent = users.filter(u=>u.status=="active").length;
+  activeAccounts.textContent = users.filter(u=>u.status==="active").length;
   inactiveAccounts.textContent = users.length - activeAccounts.textContent;
-  new Chart(accountChart,{type:"line",data:{labels:users.map((u,i)=>"Akun "+(i+1)),datasets:[{label:"Aktif=1 Nonaktif=0",data:users.map(u=>u.status=="active"?1:0),borderColor:"#00b894",fill:false}]},options:{scales:{y:{beginAtZero:true,max:1}}}});
+  new Chart(accountChart,{type:"line",data:{labels:users.map((u,i)=>"Akun "+(i+1)),datasets:[{label:"Aktif=1 Nonaktif=0",data:users.map(u=>u.status==="active"?1:0),borderColor:"#00b894",fill:false}]},options:{scales:{y:{beginAtZero:true,max:1}}}});
   accountList.innerHTML = users.map((u,i)=>`<div class="account-item">
   <p><b>Akun ${i+1}</b></p>
   <p>Username: ${u.username}</p>
@@ -316,6 +329,12 @@ function loadChats() {
     <img src="https://via.placeholder.com/40" alt="Foto">
     <div>${u}</div>
   </div>`).join("");
+  updateNotifBadge(Object.keys(chats).length);
+}
+function updateNotifBadge(count) {
+  const badge = document.getElementById("notifBadge");
+  badge.textContent = count;
+  badge.style.display = count > 0 ? "inline-block" : "none";
 }
 function openChat(user) {
   const chats = JSON.parse(localStorage.getItem("userChats")||"{}");
@@ -337,7 +356,6 @@ function sendReply() {
   chats[user].push({from:"Admin",text:msg});
   localStorage.setItem("userChats",JSON.stringify(chats));
   openChat(user);
-  replyInput.value = "";
 }
 document.addEventListener("DOMContentLoaded",()=>{
   showInfoList();
