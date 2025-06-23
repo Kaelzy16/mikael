@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-/* Tetap sama */
+/* Tetap seperti sebelumnya */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   font-family: 'Segoe UI', sans-serif;
@@ -66,6 +66,7 @@ aside nav a:hover {
 .section.active { display: block; }
 h2 { font-size: 22px; margin-top: 20px; margin-bottom: 10px; }
 .form-group { margin-bottom: 15px; }
+label { display: block; margin-bottom: 6px; font-weight: bold; }
 input[type="url"], input[type="text"] {
   width: 100%; padding: 8px; border: none; border-radius: 5px; font-size: 14px;
 }
@@ -80,20 +81,71 @@ button {
   margin-top: 10px;
 }
 button:hover { background: #019875; }
-.account-list, .chat-list {
-  margin-top: 20px;
-}
-.account-item, .chat-item {
+.item-list { margin-top: 15px; }
+.item {
   background: #2b2b44;
   padding: 10px;
   border-radius: 6px;
   margin-bottom: 10px;
 }
-.chat-window {
+.item p { margin-bottom: 5px; }
+.delete-btn {
+  background: none;
+  border: none;
+  color: red;
+  font-size: 18px;
+  cursor: pointer;
+}
+.delete-btn:hover { color: #ff6b6b; }
+.switch-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+.stats-box {
+  margin-top: 20px;
+  background: #2b2b44;
+  padding: 15px;
+  border-radius: 8px;
+}
+.stats-summary {
+  margin-top: 20px;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.stats-summary div {
+  flex: 1;
+  background: #00b894;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+}
+.account-list {
+  margin-top: 20px;
+}
+.account-item {
   background: #2b2b44;
   padding: 10px;
   border-radius: 6px;
+  margin-bottom: 10px;
+}
+.chat-list {
   margin-top: 20px;
+}
+.chat-item {
+  background: #2b2b44;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+.chat-window {
+  margin-top: 20px;
+  background: #2b2b44;
+  padding: 10px;
+  border-radius: 6px;
 }
 #chatMessages {
   height: 200px;
@@ -136,34 +188,52 @@ button:hover { background: #019875; }
 <div class="content">
   <div id="status" class="section active">
     <h2>Status Website</h2>
-    <input type="checkbox" id="toggleStatus"> Aktif
+    <div class="switch-container">
+      <label for="toggleStatus">Website Aktif</label>
+      <input type="checkbox" id="toggleStatus">
+    </div>
   </div>
   <div id="statistik" class="section">
     <h2>Statistik Akun</h2>
     <canvas id="accountChart" height="100"></canvas>
-    <div id="accountList" class="account-list"></div>
+    <div class="stats-summary">
+      <div>Total Akun: <span id="totalAccounts">0</span></div>
+      <div>Akun Aktif: <span id="activeAccounts">0</span></div>
+      <div>Akun Nonaktif: <span id="inactiveAccounts">0</span></div>
+    </div>
+    <div class="account-list" id="accountList"></div>
   </div>
   <div id="index" class="section">
     <h2>Informasi Halaman Utama</h2>
-    <input id="textInput" type="text" placeholder="Teks">
-    <input id="imageInput" type="url" placeholder="URL Gambar">
-    <input id="videoInput" type="url" placeholder="URL Video">
-    <button onclick="addInfo()">Tambah</button>
-    <div id="infoList" class="account-list"></div>
+    <div class="form-group">
+      <label for="textInput">Teks (opsional):</label>
+      <input type="text" id="textInput">
+    </div>
+    <div class="form-group">
+      <label for="imageInput">URL Gambar (opsional):</label>
+      <input type="url" id="imageInput">
+    </div>
+    <div class="form-group">
+      <label for="videoInput">URL Video (opsional):</label>
+      <input type="url" id="videoInput">
+    </div>
+    <button onclick="addInfo()">Tambah Informasi</button>
+    <div class="item-list" id="infoList"></div>
   </div>
   <div id="runningTextSection" class="section">
-    <h2>Teks Berjalan</h2>
-    <input id="runningTextInput" type="text">
+    <h2>Teks Berjalan Dashboard</h2>
+    <input type="text" id="runningTextInput" placeholder="Tulis teks...">
     <button onclick="saveRunningText()">Simpan</button>
-    <button onclick="deleteRunningText()">Hapus</button>
+    <button style="background:#e74c3c" onclick="deleteRunningText()">Hapus</button>
+    <p id="runningNotif" hidden>Perubahan disimpan!</p>
   </div>
   <div id="chats" class="section">
     <h2>Pesan Pengguna</h2>
-    <div id="chatList" class="chat-list"></div>
-    <div id="chatWindow" class="chat-window" style="display:none">
+    <div class="chat-list" id="chatList"></div>
+    <div class="chat-window" id="chatWindow" style="display:none;">
       <h3 id="chatTitle"></h3>
       <div id="chatMessages"></div>
-      <input id="replyInput" type="text" placeholder="Balas...">
+      <input type="text" id="replyInput" placeholder="Balas...">
       <button onclick="sendReply()">Kirim</button>
     </div>
   </div>
@@ -175,43 +245,69 @@ function toggleMenu() {
 function showSection(id) {
   document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
-  if (id === 'chats') loadChats();
 }
 const toggleStatus = document.getElementById("toggleStatus");
 toggleStatus.checked = localStorage.getItem("websiteStatus") !== "off";
-toggleStatus.onchange = () => localStorage.setItem("websiteStatus", toggleStatus.checked ? "on" : "off");
+toggleStatus.onchange = () => {
+  localStorage.setItem("websiteStatus", toggleStatus.checked ? "on" : "off");
+};
 function addInfo() {
-  const list = JSON.parse(localStorage.getItem("homeInfoList") || "[]");
-  list.push({ text: textInput.value, image: imageInput.value, video: videoInput.value, waktu: new Date().toLocaleString() });
-  localStorage.setItem("homeInfoList", JSON.stringify(list));
+  const text = textInput.value.trim();
+  const image = imageInput.value.trim();
+  const video = videoInput.value.trim();
+  if (!text && !image && !video) return;
+  const list = JSON.parse(localStorage.getItem("homeInfoList")||"[]");
+  list.push({text,image,video,waktu:new Date().toLocaleString()});
+  localStorage.setItem("homeInfoList",JSON.stringify(list));
   showInfoList();
 }
 function showInfoList() {
-  const list = JSON.parse(localStorage.getItem("homeInfoList") || "[]");
-  infoList.innerHTML = list.map((x,i)=>`<div class='account-item'>${x.text} - ${x.image} - ${x.video} <button onclick='deleteInfo(${i})'>Hapus</button></div>`).join("");
+  const list = JSON.parse(localStorage.getItem("homeInfoList")||"[]");
+  infoList.innerHTML = list.map((item,i)=>`<div class="item">
+  <p><b>Teks:</b> ${item.text||"-"}</p>
+  <p><b>Gambar:</b> ${item.image||"-"}</p>
+  <p><b>Video:</b> ${item.video||"-"}</p>
+  <p><i>${item.waktu}</i></p>
+  <button class="delete-btn" onclick="deleteInfo(${i})"><i class="fa fa-trash"></i></button>
+  </div>`).join("");
 }
 function deleteInfo(i) {
-  const list = JSON.parse(localStorage.getItem("homeInfoList") || "[]");
+  const list = JSON.parse(localStorage.getItem("homeInfoList")||"[]");
   list.splice(i,1);
-  localStorage.setItem("homeInfoList", JSON.stringify(list));
+  localStorage.setItem("homeInfoList",JSON.stringify(list));
   showInfoList();
 }
+function showStatistics() {
+  const users = JSON.parse(localStorage.getItem("usersData")||"[]");
+  totalAccounts.textContent = users.length;
+  activeAccounts.textContent = users.filter(u=>u.status=="active").length;
+  inactiveAccounts.textContent = users.length - activeAccounts.textContent;
+  new Chart(accountChart,{type:"line",data:{labels:users.map((u,i)=>"Akun "+(i+1)),datasets:[{label:"Aktif=1 Nonaktif=0",data:users.map(u=>u.status=="active"?1:0),borderColor:"#00b894",fill:false}]},options:{scales:{y:{beginAtZero:true,max:1}}}});
+  accountList.innerHTML = users.map((u,i)=>`<div class="account-item">
+  <p><b>Akun ${i+1}</b></p>
+  <p>Username: ${u.username}</p>
+  <p>Password: ${u.password}</p>
+  <p>Status: ${u.status}</p>
+  </div>`).join("");
+}
 function saveRunningText() {
-  localStorage.setItem("runningText", runningTextInput.value);
+  localStorage.setItem("runningText", runningTextInput.value.trim());
+  runningNotif.hidden = false;
+  setTimeout(()=>runningNotif.hidden=true,2000);
 }
 function deleteRunningText() {
   localStorage.removeItem("runningText");
   runningTextInput.value = "";
 }
 function loadChats() {
-  const chats = JSON.parse(localStorage.getItem("userChats") || "{}");
-  chatList.innerHTML = Object.keys(chats).map(u=>`<div class='chat-item' onclick='openChat("${u}")'>${u}</div>`).join("");
+  const chats = JSON.parse(localStorage.getItem("userChats")||"{}");
+  chatList.innerHTML = Object.keys(chats).map(u=>`<div class="chat-item" onclick="openChat('${u}')">${u}</div>`).join("");
 }
 function openChat(user) {
-  const chats = JSON.parse(localStorage.getItem("userChats") || "{}");
+  const chats = JSON.parse(localStorage.getItem("userChats")||"{}");
+  chatTitle.textContent = "Chat dengan "+user;
   chatWindow.style.display = "block";
   chatWindow.dataset.user = user;
-  chatTitle.textContent = `Chat dengan ${user}`;
   chatMessages.innerHTML = (chats[user]||[]).map(m=>`<div><b>${m.from}:</b> ${m.text}</div>`).join("");
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
@@ -219,16 +315,18 @@ function sendReply() {
   const user = chatWindow.dataset.user;
   const msg = replyInput.value.trim();
   if (!msg) return;
-  const chats = JSON.parse(localStorage.getItem("userChats") || "{}");
-  chats[user] = chats[user] || [];
-  chats[user].push({ from: "Admin", text: msg });
-  localStorage.setItem("userChats", JSON.stringify(chats));
+  const chats = JSON.parse(localStorage.getItem("userChats")||"{}");
+  chats[user] = chats[user]||[];
+  chats[user].push({from:"Admin",text:msg});
+  localStorage.setItem("userChats",JSON.stringify(chats));
   openChat(user);
   replyInput.value = "";
 }
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded",()=>{
   showInfoList();
-  runningTextInput.value = localStorage.getItem("runningText") || "";
+  showStatistics();
+  runningTextInput.value = localStorage.getItem("runningText")||"";
+  loadChats();
 });
 </script>
 </body>
