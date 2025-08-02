@@ -1,144 +1,147 @@
-<!-- index.html --><!DOCTYPE html><html lang="id"><head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&display=swap" rel="stylesheet">
-<style>
-/* ... CSS tetap sama seperti sebelumnya ... */
-:root {
-  --primary: #3b82f6;
-  --white: #ffffff;
-  --bg: #f0f4f8;
-  --text: #1f2937;
-  --text-light: #6b7280;
-  --nav-icon-size: 24px;
-}
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-body {
-  font-family: 'Inter', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  padding-bottom: 4.5rem;
-}
-header {
-  background: var(--primary);
-  color: var(--white);
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-radius: 0 0 1rem 1rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-.logo {
-  font-size: 1.5rem;
-  font-weight: 700;
-}
-.logout-btn {
-  background: rgba(255,255,255,0.1);
-  border: none;
-  color: var(--white);
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s;
-  text-decoration: none;
-}
-.logout-btn:hover {
-  background: rgba(255,255,255,0.25);
-  transform: translateY(-1px);
-}
-main {
-  padding: 3rem 2rem 2rem;
-  text-align: center;
-}
-main h1 {
-  font-size: 2.2rem;
-  margin-bottom: 0.5rem;
-}
-main p {
-  color: var(--text-light);
-  font-size: 1.1rem;
-  margin-bottom: 1rem;
-}
-.time {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: var(--text);
-  margin-top: 1rem;
-}
-.running-text {
-  margin-top: 1rem;
-  color: var(--primary);
-  font-size: 1rem;
-  overflow: hidden;
-  white-space: nowrap;
-  box-sizing: border-box;
-  animation: slide 10s linear infinite;
-}
-@keyframes slide {
-  0% { transform: translateX(100%); }
-  100% { transform: translateX(-100%); }
-}
-.dashboard-content {
-  margin-top: 2rem;
-  text-align: left;
-}
-.card {
-  background: var(--white);
-  border-radius: 1rem;
-  padding: 1.5rem;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-  margin-bottom: 1rem;
-}
-.card h3 {
-  font-size: 1.2rem;
-  margin-bottom: 0.5rem;
-}
-.card p {
-  color: var(--text-light);
-  font-size: 0.95rem;
-  margin: 0;
-}
-.maintenance {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  text-align: center;
-  background: var(--bg);
-}
-.maintenance svg {
-  width: 80px;
-  height: 80px;
-  fill: var(--primary);
-  animation: spin 2s linear infinite;
-}
-.maintenance h2 {
-  margin-top: 1rem;
-  font-size: 1.4rem;
-}
-.maintenance p {
-  color: var(--text-light);
-  margin-top: 0.5rem;
-}
-</style>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #3b82f6;
+      --white: #ffffff;
+      --bg: #f0f4f8;
+      --text: #1f2937;
+      --text-light: #6b7280;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      overflow-x: hidden;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding-bottom: 4.5rem;
+    }
+    header {
+      background: var(--primary);
+      color: var(--white);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 0 0 1rem 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    .logout-btn {
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: var(--white);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .logout-btn:hover {
+      background: rgba(255,255,255,0.25);
+      transform: translateY(-1px);
+    }
+    main {
+      padding: 3rem 2rem 2rem;
+      text-align: center;
+    }
+    main h1 {
+      font-size: 2.2rem;
+      margin-bottom: 0.5rem;
+    }
+    main p {
+      color: var(--text-light);
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+    .time {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-top: 1rem;
+    }
+    .running-text {
+      margin-top: 1rem;
+      color: var(--primary);
+      font-size: 1rem;
+      overflow: hidden;
+      white-space: nowrap;
+      box-sizing: border-box;
+      animation: slide 10s linear infinite;
+    }
+    @keyframes slide {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+    .dashboard-content {
+      margin-top: 2rem;
+      text-align: left;
+    }
+    .card {
+      background: var(--white);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      margin-bottom: 1rem;
+    }
+    .card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+    .card p {
+      color: var(--text-light);
+      font-size: 0.95rem;
+    }
+    .maintenance {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+      background: var(--bg);
+    }
+    .maintenance svg {
+      width: 80px;
+      height: 80px;
+      fill: var(--primary);
+      animation: spin 2s linear infinite;
+    }
+    .maintenance h2 {
+      margin-top: 1rem;
+      font-size: 1.4rem;
+    }
+    .maintenance p {
+      color: var(--text-light);
+      margin-top: 0.5rem;
+    }
+  </style>
 </head>
 <body>
+
 <div id="content">
   <header>
-    <div class="logo">MyDashboard</div>
+    <div class="logo">Mikael.biz.id</div>
     <div>
       <a href="login.html" class="logout-btn">Login</a>
       <a href="registration.html" class="logout-btn" style="margin-left: 0.5rem;">Daftar</a>
     </div>
   </header>
+
   <main>
     <h1 id="greeting">Haii!</h1>
     <p id="welcome">Selamat datang di dashboard.</p>
@@ -153,6 +156,7 @@ main p {
     </div>
   </main>
 </div>
+
 <div id="maintenance" style="display:none;">
   <div class="maintenance">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -162,45 +166,57 @@ main p {
     <p>Website sedang dalam pengembangan. Silakan kembali nanti.</p>
   </div>
 </div>
+
 <script>
-const websiteStatus = localStorage.getItem("websiteStatus") || "on";
-const content = document.getElementById("content");
-const maintenance = document.getElementById("maintenance");
-if (websiteStatus === "off") {
-  content.style.display = "none";
-  maintenance.style.display = "flex";
-} else {
-  content.style.display = "block";
-  maintenance.style.display = "none";
-}
-const currentUser = localStorage.getItem('currentUser');
-const usersData = JSON.parse(localStorage.getItem('usersData')) || [];
-const user = usersData.find(u => u.username === currentUser) || { name: 'Pengguna' };
-function getGreeting() {
-  const hour = new Date().getHours();
-  if (hour < 12) return 'Selamat pagi';
-  if (hour < 18) return 'Selamat siang';
-  return 'Selamat malam';
-}
-document.getElementById('greeting').textContent = `Haii! ${user.name}, ${getGreeting()}`;
-document.getElementById('welcome').textContent = `Senang melihatmu kembali, ${user.name}.`;
-function updateClock() {
-  const now = new Date();
-  document.getElementById('clock').textContent = now.toLocaleTimeString('id-ID', { hour12: false });
-}
-setInterval(updateClock, 1000);
-updateClock();
-const runningText = localStorage.getItem("runningText") || "";
-document.getElementById("runningText").textContent = runningText;
-const homeInfoContainer = document.getElementById("homeInfoContainer");
-const infoList = JSON.parse(localStorage.getItem("homeInfoList") || "[]");
-infoList.forEach(info => {
-  const card = document.createElement("div");
-  card.className = "card";
-  if(info.text) card.innerHTML += `<p>${info.text}</p>`;
-  if(info.image) card.innerHTML += `<img src="${info.image}" style="width:100%;border-radius:8px;margin-top:10px">`;
-  if(info.video) card.innerHTML += `<video controls style="width:100%;margin-top:10px"><source src="${info.video}" type="video/mp4"></video>`;
-  homeInfoContainer.appendChild(card);
-});
+  const websiteStatus = localStorage.getItem("websiteStatus") || "on";
+  const content = document.getElementById("content");
+  const maintenance = document.getElementById("maintenance");
+  if (websiteStatus === "off") {
+    content.style.display = "none";
+    maintenance.style.display = "flex";
+  } else {
+    content.style.display = "block";
+    maintenance.style.display = "none";
+  }
+
+  const currentUser = localStorage.getItem('currentUser');
+  const usersData = JSON.parse(localStorage.getItem('usersData')) || [];
+  const user = usersData.find(u => u.username === currentUser) || { name: 'Pengguna' };
+
+  function getGreeting() {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Selamat pagi';
+    if (hour < 18) return 'Selamat siang';
+    return 'Selamat malam';
+  }
+
+  document.getElementById('greeting').textContent = `Haii! ${user.name}, ${getGreeting()}`;
+  document.getElementById('welcome').textContent = `Senang melihatmu kembali, ${user.name}.`;
+
+  function updateClock() {
+    const now = new Date();
+    document.getElementById('clock').textContent = now.toLocaleTimeString('id-ID', { hour12: false });
+  }
+  setInterval(updateClock, 1000);
+  updateClock();
+
+  const runningText = localStorage.getItem("runningText") || "";
+  document.getElementById("runningText").textContent = runningText;
+
+  const homeInfoContainer = document.getElementById("homeInfoContainer");
+  const infoList = JSON.parse(localStorage.getItem("homeInfoList") || "[]");
+
+  infoList.forEach(info => {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    if(info.text) card.innerHTML += `<p>${info.text}</p>`;
+    if(info.image) card.innerHTML += `<img src="${info.image}" style="width:100%;border-radius:8px;margin-top:10px">`;
+    if(info.video) card.innerHTML += `<video controls style="width:100%;margin-top:10px"><source src="${info.video}" type="video/mp4"></video>`;
+
+    homeInfoContainer.appendChild(card);
+  });
 </script>
-</body></html>
+
+</body>
+</html>
