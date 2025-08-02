@@ -319,45 +319,73 @@
     }
 
     function loadChats() {
-      const chats = JSON.parse(localStorage.getItem("userChats") || "{}");
-      chatList.innerHTML = Object.keys(chats).map(u => `
-        <div class="chat-item" onclick="openChat('${u}')">
-          <img src="https://via.placeholder.com/40" alt="Foto">
-          <div>${u}</div>
-        </div>`).join("");
-      updateNotifBadge(Object.keys(chats).length);
-    }
+  const chats = JSON.parse(localStorage.getItem("userChats") || "{}");
+  const sortedUsers = Object.entries(chats)
+    .sort((a, b) => {
+      const aTime = new Date(a[1]?.slice(-1)[0]?.time || 0);
+      const bTime = new Date(b[1]?.slice(-1)[0]?.time || 0);
+      return bTime - aTime;
+    })
+    .map(([user]) => user);
 
-    function updateNotifBadge(c) {
-      const b = document.getElementById("notifBadge");
-      b.textContent = c;
-      b.style.display = c > 0 ? "inline-block" : "none";
-    }
+  chatList.innerHTML = sortedUsers.map(u => `
+    <div class="chat-item" onclick="openChat('${u}')">
+      <img src="https://via.placeholder.com/40" alt="Foto">
+      <div>${u}</div>
+    </div>`).join("");
 
-    function openChat(user) {
-      const c = JSON.parse(localStorage.getItem("userChats") || "{}");
-      chatTitle.textContent = "Chat dengan " + user;
-      chatWindow.style.display = "block";
-      chatWindow.dataset.user = user;
-      chatMessages.innerHTML = (c[user] || []).map(m => `
-        <div><b>${m.from}:</b> ${m.text}</div>`).join("");
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
+  updateNotifBadge(sortedUsers.length);
+}
 
-    function closeChat() {
-      chatWindow.style.display = "none";
-    }
+function updateNotifBadge(c) {
+  const b = document.getElementById("notifBadge");
+  b.textContent = c;
+  b.style.display = c > 0 ? "inline-block" : "none";
+}
 
-    function sendReply() {
-      const user = chatWindow.dataset.user,
-            msg = replyInput.value.trim();
-      if (!msg) return;
-      const c = JSON.parse(localStorage.getItem("userChats") || "{}");
-      c[user] = c[user] || [];
-      c[user].push({ from: "Admin", text: msg });
-      localStorage.setItem("userChats", JSON.stringify(c));
-      openChat(user);
-    }
+function openChat(user) {
+  const c = JSON.parse(localStorage.getItem("userChats") || "{}");
+  chatTitle.textContent = "Chat dengan " + user;
+  chatWindow.style.display = "block";
+  chatWindow.dataset.user = user;
+  localStorage.setItem(`read_${user}`, "true");
+
+  const chat = (c[user] || []).map(m => `
+    <div>
+      <b>${m.from}:</b> ${m.text}<br>
+      <small>${new Date(m.time).toLocaleTimeString()}</small>
+    </div>`).join("");
+
+  chatMessages.innerHTML = chat;
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+  loadChats(); // refresh notifikasi
+}
+
+function closeChat() {
+  chatWindow.style.display = "none";
+}
+
+function sendReply() {
+  const user = chatWindow.dataset.user;
+  const msg = replyInput.value.trim();
+  if (!msg) return;
+
+  const chats = JSON.parse(localStorage.getItem("userChats") || "{}");
+  chats[user] = chats[user] || [];
+  chats[user].push({ from: "Admin", text: msg, time: new Date().toISOString() });
+  localStorage.setItem("userChats", JSON.stringify(chats));
+  replyInput.value = "";
+  openChat(user);
+}
+
+function deleteChat(user) {
+  const chats = JSON.parse(localStorage.getItem("userChats") || "{}");
+  delete chats[user];
+  localStorage.setItem("userChats", JSON.stringify(chats));
+  localStorage.removeItem(`read_${user}`);
+  chatWindow.style.display = "none";
+  loadChats();
+}
 
     function checkLogin() {
       const u = loginUser.value.trim(),
