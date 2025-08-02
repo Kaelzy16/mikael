@@ -5,191 +5,70 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
+/* ...[CSS TETAP SAMA, TIDAK DIUBAH]... */
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #1e1e2f;
-  color: #fff;
-}
-header {
-  background: #121220;
-  padding: 15px 20px;
-  display: flex;
-  align-items: center;
-  height: 60px;
-}
-.menu-toggle {
-  font-size: 24px;
-  cursor: pointer;
-  color: white;
-  border: none;
-  background: none;
-  display: none;
-}
-aside#sidebar {
-  width: 220px;
-  background: #151529;
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  padding-top: 20px;
-  display: flex;
-  flex-direction: column;
-}
-aside .logo {
-  color: white;
-  font-size: 22px;
-  font-weight: bold;
-  padding: 0 20px 20px;
-}
-aside nav a {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 20px;
-  color: white;
-  text-decoration: none;
-  transition: background 0.3s;
-  position: relative;
-}
-aside nav a:hover {
-  background: #2ecc71;
-  color: black;
-}
-.badge {
-  background: red;
-  color: white;
-  border-radius: 50%;
-  padding: 2px 6px;
-  font-size: 12px;
-  position: absolute;
-  top: 8px;
-  right: 15px;
-}
-.content {
-  margin-left: 220px;
-  padding: 20px;
-}
+body { font-family: 'Segoe UI', sans-serif; background-color: #1e1e2f; color: #fff; }
+header { background: #121220; padding: 15px 20px; display: flex; align-items: center; height: 60px; }
+.menu-toggle { font-size: 24px; cursor: pointer; color: white; border: none; background: none; display: none; }
+aside#sidebar { width: 220px; background: #151529; position: fixed; top: 0; left: 0; bottom: 0; padding-top: 20px; display: flex; flex-direction: column; }
+aside .logo { color: white; font-size: 22px; font-weight: bold; padding: 0 20px 20px; }
+aside nav a { display: flex; align-items: center; gap: 12px; padding: 12px 20px; color: white; text-decoration: none; transition: background 0.3s; position: relative; }
+aside nav a:hover { background: #2ecc71; color: black; }
+.badge { background: red; color: white; border-radius: 50%; padding: 2px 6px; font-size: 12px; position: absolute; top: 8px; right: 15px; }
+.content { margin-left: 220px; padding: 20px; }
 .section { display: none; }
 .section.active { display: block; }
 h2 { font-size: 22px; margin-top: 20px; margin-bottom: 10px; }
 .form-group { margin-bottom: 15px; }
 label { display: block; margin-bottom: 6px; font-weight: bold; }
-input[type="url"], input[type="text"] {
+input[type="url"], input[type="text"], input[type="password"] {
   width: 100%; padding: 8px; border: none; border-radius: 5px; font-size: 14px;
 }
-button {
-  padding: 10px 20px;
-  background: #00b894;
-  border: none;
-  color: white;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  margin-top: 10px;
-}
+button { padding: 10px 20px; background: #00b894; border: none; color: white; border-radius: 5px; cursor: pointer; font-size: 16px; margin-top: 10px; }
 button:hover { background: #019875; }
 .item-list { margin-top: 15px; }
-.item {
-  background: #2b2b44;
-  padding: 10px;
-  border-radius: 6px;
-  margin-bottom: 10px;
-}
+.item { background: #2b2b44; padding: 10px; border-radius: 6px; margin-bottom: 10px; }
 .item p { margin-bottom: 5px; }
-.delete-btn {
-  background: none;
-  border: none;
-  color: red;
-  font-size: 18px;
-  cursor: pointer;
-}
+.delete-btn { background: none; border: none; color: red; font-size: 18px; cursor: pointer; }
 .delete-btn:hover { color: #ff6b6b; }
-.switch-container {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 10px;
-}
-.stats-summary {
-  margin-top: 20px;
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-.stats-summary div {
-  flex: 1;
-  background: #00b894;
-  padding: 15px;
-  border-radius: 8px;
-  text-align: center;
-}
-.account-list {
-  margin-top: 20px;
-}
-.account-item {
-  background: #2b2b44;
-  padding: 10px;
-  border-radius: 6px;
-  margin-bottom: 10px;
-}
-.chat-list {
-  margin-top: 20px;
-}
-.chat-item {
-  background: #2b2b44;
-  padding: 10px;
-  border-radius: 6px;
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
-}
-.chat-item img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-}
-.chat-window {
-  margin-top: 20px;
-  background: #2b2b44;
-  padding: 10px;
-  border-radius: 6px;
-}
-#chatMessages {
-  height: 200px;
-  overflow-y: auto;
-  background: #1a1a2f;
-  padding: 8px;
-  margin-bottom: 10px;
-}
-#chatMessages div {
-  margin-bottom: 6px;
-}
-.back-btn {
-  margin-bottom: 10px;
-  background: #00b894;
-  border: none;
-  padding: 5px 10px;
-  color: white;
-  cursor: pointer;
-  border-radius: 4px;
-}
+.switch-container { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+.stats-summary { margin-top: 20px; display: flex; gap: 20px; flex-wrap: wrap; }
+.stats-summary div { flex: 1; background: #00b894; padding: 15px; border-radius: 8px; text-align: center; }
+.account-list { margin-top: 20px; }
+.account-item { background: #2b2b44; padding: 10px; border-radius: 6px; margin-bottom: 10px; position: relative; }
+.delete-account-btn { position: absolute; top: 10px; right: 10px; background: none; border: none; color: #e74c3c; font-size: 18px; cursor: pointer; }
+.delete-account-btn:hover { color: #ff7675; }
+.chat-list { margin-top: 20px; }
+.chat-item { background: #2b2b44; padding: 10px; border-radius: 6px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; cursor: pointer; }
+.chat-item img { width: 40px; height: 40px; border-radius: 50%; }
+.chat-window { margin-top: 20px; background: #2b2b44; padding: 10px; border-radius: 6px; }
+#chatMessages { height: 200px; overflow-y: auto; background: #1a1a2f; padding: 8px; margin-bottom: 10px; }
+#chatMessages div { margin-bottom: 6px; }
+.back-btn { margin-bottom: 10px; background: #00b894; border: none; padding: 5px 10px; color: white; cursor: pointer; border-radius: 4px; }
+.login-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); z-index: 9999; display: flex; align-items: center; justify-content: center; }
+.login-box { background: #151529; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px #000; text-align: center; width: 300px; }
+.login-box h2 { margin-bottom: 20px; }
+.login-box input { margin-bottom: 15px; }
+.login-box .error { color: red; margin-top: 10px; }
 @media (max-width: 768px) {
   .content { margin-left: 0; }
-  aside#sidebar {
-    position: absolute;
-    transform: translateX(-100%);
-    transition: transform 0.3s ease;
-  }
+  aside#sidebar { position: absolute; transform: translateX(-100%); transition: transform 0.3s ease; }
   aside#sidebar.show { transform: translateX(0); }
   .menu-toggle { display: block; margin-left: auto; }
 }
 </style>
 </head>
 <body>
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-box">
+    <h2>Login Admin</h2>
+    <input type="text" id="loginUser" placeholder="Username">
+    <input type="password" id="loginPass" placeholder="Password">
+    <button onclick="checkLogin()">Masuk</button>
+    <div class="error" id="loginError"></div>
+  </div>
+</div>
+
 <header>
   <button class="menu-toggle" onclick="toggleMenu()">
     <i class="fa fa-bars"></i>
@@ -262,107 +141,56 @@ button:hover { background: #019875; }
   </div>
 </div>
 <script>
-function toggleMenu() {
-  document.getElementById("sidebar").classList.toggle("show");
-}
-function showSection(id) {
-  document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-  if (id === "chats") updateNotifBadge(0);
-}
-const toggleStatus = document.getElementById("toggleStatus");
-toggleStatus.checked = localStorage.getItem("websiteStatus") !== "off";
-toggleStatus.onchange = () => {
-  localStorage.setItem("websiteStatus", toggleStatus.checked ? "on" : "off");
-};
-function addInfo() {
-  const text = textInput.value.trim();
-  const image = imageInput.value.trim();
-  const video = videoInput.value.trim();
-  if (!text && !image && !video) return;
-  const list = JSON.parse(localStorage.getItem("homeInfoList")||"[]");
-  list.push({text,image,video,waktu:new Date().toLocaleString()});
-  localStorage.setItem("homeInfoList",JSON.stringify(list));
-  showInfoList();
-}
-function showInfoList() {
-  const list = JSON.parse(localStorage.getItem("homeInfoList")||"[]");
-  infoList.innerHTML = list.map((item,i)=>`<div class="item">
-  <p><b>Teks:</b> ${item.text||"-"}</p>
-  <p><b>Gambar:</b> ${item.image||"-"}</p>
-  <p><b>Video:</b> ${item.video||"-"}</p>
-  <p><i>${item.waktu}</i></p>
-  <button class="delete-btn" onclick="deleteInfo(${i})"><i class="fa fa-trash"></i></button>
-  </div>`).join("");
-}
-function deleteInfo(i) {
-  const list = JSON.parse(localStorage.getItem("homeInfoList")||"[]");
-  list.splice(i,1);
-  localStorage.setItem("homeInfoList",JSON.stringify(list));
-  showInfoList();
-}
-function showStatistics() {
-  const users = JSON.parse(localStorage.getItem("usersData")||"[]");
-  totalAccounts.textContent = users.length;
-  activeAccounts.textContent = users.filter(u=>u.status==="active").length;
-  inactiveAccounts.textContent = users.length - activeAccounts.textContent;
+function toggleMenu(){document.getElementById("sidebar").classList.toggle("show")}
+function showSection(id){document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active");if(id==="chats")updateNotifBadge(0)}
+const toggleStatus=document.getElementById("toggleStatus");
+toggleStatus.checked=localStorage.getItem("websiteStatus")!=="off";
+toggleStatus.onchange=()=>localStorage.setItem("websiteStatus",toggleStatus.checked?"on":"off");
+
+function addInfo(){const text=textInput.value.trim(),image=imageInput.value.trim(),video=videoInput.value.trim();
+if(!text&&!image&&!video)return;
+const list=JSON.parse(localStorage.getItem("homeInfoList")||"[]");
+list.push({text,image,video,waktu:new Date().toLocaleString()});
+localStorage.setItem("homeInfoList",JSON.stringify(list));
+showInfoList()}
+function showInfoList(){const list=JSON.parse(localStorage.getItem("homeInfoList")||"[]");
+infoList.innerHTML=list.map((item,i)=>`<div class="item"><p><b>Teks:</b> ${item.text||"-"}</p><p><b>Gambar:</b> ${item.image||"-"}</p><p><b>Video:</b> ${item.video||"-"}</p><p><i>${item.waktu}</i></p><button class="delete-btn" onclick="deleteInfo(${i})"><i class="fa fa-trash"></i></button></div>`).join("")}
+function deleteInfo(i){const list=JSON.parse(localStorage.getItem("homeInfoList")||"[]");list.splice(i,1);localStorage.setItem("homeInfoList",JSON.stringify(list));showInfoList()}
+
+function showStatistics(){
+  const users=JSON.parse(localStorage.getItem("usersData")||"[]");
+  totalAccounts.textContent=users.length;
+  activeAccounts.textContent=users.filter(u=>u.status==="active").length;
+  inactiveAccounts.textContent=users.length-activeAccounts.textContent;
   new Chart(accountChart,{type:"line",data:{labels:users.map((u,i)=>"Akun "+(i+1)),datasets:[{label:"Aktif=1 Nonaktif=0",data:users.map(u=>u.status==="active"?1:0),borderColor:"#00b894",fill:false}]},options:{scales:{y:{beginAtZero:true,max:1}}}});
-  accountList.innerHTML = users.map((u,i)=>`<div class="account-item">
-  <p><b>Akun ${i+1}</b></p>
-  <p>Username: ${u.username}</p>
-  <p>Password: ${u.password}</p>
-  <p>Status: ${u.status}</p>
-  </div>`).join("");
+  accountList.innerHTML=users.map((u,i)=>`<div class="account-item"><p><b>Akun ${i+1}</b></p><p>Username: ${u.username}</p><p>Password: ${u.password}</p><p>Status: ${u.status}</p><button class="delete-account-btn" onclick="deleteAccount(${i})"><i class="fa fa-user-slash"></i></button></div>`).join("");
 }
-function saveRunningText() {
-  localStorage.setItem("runningText", runningTextInput.value.trim());
-  runningNotif.hidden = false;
-  setTimeout(()=>runningNotif.hidden=true,2000);
+function deleteAccount(i){
+  if(!confirm("Yakin ingin menghapus akun ini?"))return;
+  const uarr=JSON.parse(localStorage.getItem("usersData")||"[]");
+  uarr.splice(i,1);
+  localStorage.setItem("usersData",JSON.stringify(uarr));
+  totalAccounts.textContent=uarr.length;
+  activeAccounts.textContent=uarr.filter(u=>u.status==="active").length;
+  inactiveAccounts.textContent=uarr.length - activeAccounts.textContent;
+  const items=document.querySelectorAll(".account-item");
+  if(items[i]) items[i].remove();
 }
-function deleteRunningText() {
-  localStorage.removeItem("runningText");
-  runningTextInput.value = "";
-}
-function loadChats() {
-  const chats = JSON.parse(localStorage.getItem("userChats")||"{}");
-  chatList.innerHTML = Object.keys(chats).map(u=>`<div class="chat-item" onclick="openChat('${u}')">
-    <img src="https://via.placeholder.com/40" alt="Foto">
-    <div>${u}</div>
-  </div>`).join("");
-  updateNotifBadge(Object.keys(chats).length);
-}
-function updateNotifBadge(count) {
-  const badge = document.getElementById("notifBadge");
-  badge.textContent = count;
-  badge.style.display = count > 0 ? "inline-block" : "none";
-}
-function openChat(user) {
-  const chats = JSON.parse(localStorage.getItem("userChats")||"{}");
-  chatTitle.textContent = "Chat dengan "+user;
-  chatWindow.style.display = "block";
-  chatWindow.dataset.user = user;
-  chatMessages.innerHTML = (chats[user]||[]).map(m=>`<div><b>${m.from}:</b> ${m.text}</div>`).join("");
-  chatMessages.scrollTop = chatMessages.scrollHeight;
-}
-function closeChat() {
-  chatWindow.style.display = "none";
-}
-function sendReply() {
-  const user = chatWindow.dataset.user;
-  const msg = replyInput.value.trim();
-  if (!msg) return;
-  const chats = JSON.parse(localStorage.getItem("userChats")||"{}");
-  chats[user] = chats[user]||[];
-  chats[user].push({from:"Admin",text:msg});
-  localStorage.setItem("userChats",JSON.stringify(chats));
-  openChat(user);
-}
+
+function saveRunningText(){localStorage.setItem("runningText",runningTextInput.value.trim());runningNotif.hidden=false;setTimeout(()=>runningNotif.hidden=true,2000)}
+function deleteRunningText(){localStorage.removeItem("runningText");runningTextInput.value=""}
+function loadChats(){const chats=JSON.parse(localStorage.getItem("userChats")||"{}");chatList.innerHTML=Object.keys(chats).map(u=>`<div class="chat-item" onclick="openChat('${u}')"><img src="https://via.placeholder.com/40" alt="Foto"><div>${u}</div></div>`).join("");updateNotifBadge(Object.keys(chats).length)}
+function updateNotifBadge(c){const b=document.getElementById("notifBadge");b.textContent=c;b.style.display=c>0?"inline-block":"none"}
+function openChat(user){const c=JSON.parse(localStorage.getItem("userChats")||"{}");chatTitle.textContent="Chat dengan "+user;chatWindow.style.display="block";chatWindow.dataset.user=user;chatMessages.innerHTML=(c[user]||[]).map(m=>`<div><b>${m.from}:</b> ${m.text}</div>`).join("");chatMessages.scrollTop=chatMessages.scrollHeight}
+function closeChat(){chatWindow.style.display="none"}
+function sendReply(){const user=chatWindow.dataset.user,msg=replyInput.value.trim();if(!msg)return;const c=JSON.parse(localStorage.getItem("userChats")||"{}");c[user]=c[user]||[];c[user].push({from:"Admin",text:msg});localStorage.setItem("userChats",JSON.stringify(c));openChat(user)}
+function checkLogin(){const u=loginUser.value.trim(),p=loginPass.value.trim();if(u==="kael"&&p==="kael1612"){localStorage.setItem("adminLoggedIn","true");document.getElementById("loginOverlay").style.display="none"}else document.getElementById("loginError").innerText="Username atau Password salah!"}
 document.addEventListener("DOMContentLoaded",()=>{
+  if(localStorage.getItem("adminLoggedIn")==="true")document.getElementById("loginOverlay").style.display="none";
   showInfoList();
   showStatistics();
-  runningTextInput.value = localStorage.getItem("runningText")||"";
+  runningTextInput.value=localStorage.getItem("runningText")||"";
   loadChats();
 });
 </script>
-</body>
-</html>
+</body></html>
