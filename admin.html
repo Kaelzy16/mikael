@@ -1,196 +1,447 @@
-<!DOCTYPE html><html lang="id"><head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Panel</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<style>
-/* ...[CSS TETAP SAMA, TIDAK DIUBAH]... */
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Segoe UI', sans-serif; background-color: #1e1e2f; color: #fff; }
-header { background: #121220; padding: 15px 20px; display: flex; align-items: center; height: 60px; }
-.menu-toggle { font-size: 24px; cursor: pointer; color: white; border: none; background: none; display: none; }
-aside#sidebar { width: 220px; background: #151529; position: fixed; top: 0; left: 0; bottom: 0; padding-top: 20px; display: flex; flex-direction: column; }
-aside .logo { color: white; font-size: 22px; font-weight: bold; padding: 0 20px 20px; }
-aside nav a { display: flex; align-items: center; gap: 12px; padding: 12px 20px; color: white; text-decoration: none; transition: background 0.3s; position: relative; }
-aside nav a:hover { background: #2ecc71; color: black; }
-.badge { background: red; color: white; border-radius: 50%; padding: 2px 6px; font-size: 12px; position: absolute; top: 8px; right: 15px; }
-.content { margin-left: 220px; padding: 20px; }
-.section { display: none; }
-.section.active { display: block; }
-h2 { font-size: 22px; margin-top: 20px; margin-bottom: 10px; }
-.form-group { margin-bottom: 15px; }
-label { display: block; margin-bottom: 6px; font-weight: bold; }
-input[type="url"], input[type="text"], input[type="password"] {
-  width: 100%; padding: 8px; border: none; border-radius: 5px; font-size: 14px;
-}
-button { padding: 10px 20px; background: #00b894; border: none; color: white; border-radius: 5px; cursor: pointer; font-size: 16px; margin-top: 10px; }
-button:hover { background: #019875; }
-.item-list { margin-top: 15px; }
-.item { background: #2b2b44; padding: 10px; border-radius: 6px; margin-bottom: 10px; }
-.item p { margin-bottom: 5px; }
-.delete-btn { background: none; border: none; color: red; font-size: 18px; cursor: pointer; }
-.delete-btn:hover { color: #ff6b6b; }
-.switch-container { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
-.stats-summary { margin-top: 20px; display: flex; gap: 20px; flex-wrap: wrap; }
-.stats-summary div { flex: 1; background: #00b894; padding: 15px; border-radius: 8px; text-align: center; }
-.account-list { margin-top: 20px; }
-.account-item { background: #2b2b44; padding: 10px; border-radius: 6px; margin-bottom: 10px; position: relative; }
-.delete-account-btn { position: absolute; top: 10px; right: 10px; background: none; border: none; color: #e74c3c; font-size: 18px; cursor: pointer; }
-.delete-account-btn:hover { color: #ff7675; }
-.chat-list { margin-top: 20px; }
-.chat-item { background: #2b2b44; padding: 10px; border-radius: 6px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; cursor: pointer; }
-.chat-item img { width: 40px; height: 40px; border-radius: 50%; }
-.chat-window { margin-top: 20px; background: #2b2b44; padding: 10px; border-radius: 6px; }
-#chatMessages { height: 200px; overflow-y: auto; background: #1a1a2f; padding: 8px; margin-bottom: 10px; }
-#chatMessages div { margin-bottom: 6px; }
-.back-btn { margin-bottom: 10px; background: #00b894; border: none; padding: 5px 10px; color: white; cursor: pointer; border-radius: 4px; }
-.login-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); z-index: 9999; display: flex; align-items: center; justify-content: center; }
-.login-box { background: #151529; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px #000; text-align: center; width: 300px; }
-.login-box h2 { margin-bottom: 20px; }
-.login-box input { margin-bottom: 15px; }
-.login-box .error { color: red; margin-top: 10px; }
-@media (max-width: 768px) {
-  .content { margin-left: 0; }
-  aside#sidebar { position: absolute; transform: translateX(-100%); transition: transform 0.3s ease; }
-  aside#sidebar.show { transform: translateX(0); }
-  .menu-toggle { display: block; margin-left: auto; }
-}
-</style>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* ...[CSS TETAP SAMA, TIDAK DIUBAH]... */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; background-color: #1e1e2f; color: #fff; }
+    header { background: #121220; padding: 15px 20px; display: flex; align-items: center; height: 60px; }
+    .menu-toggle { font-size: 24px; cursor: pointer; color: white; border: none; background: none; display: none; }
+    aside#sidebar {
+      width: 220px; background: #151529; position: fixed;
+      top: 0; left: 0; bottom: 0; padding-top: 20px; display: flex; flex-direction: column;
+    }
+    aside .logo { color: white; font-size: 22px; font-weight: bold; padding: 0 20px 20px; }
+    aside nav a {
+      display: flex; align-items: center; gap: 12px; padding: 12px 20px;
+      color: white; text-decoration: none; transition: background 0.3s; position: relative;
+    }
+    aside nav a:hover { background: #2ecc71; color: black; }
+    .badge {
+      background: red; color: white; border-radius: 50%; padding: 2px 6px;
+      font-size: 12px; position: absolute; top: 8px; right: 15px;
+    }
+    .content { margin-left: 220px; padding: 20px; }
+    .section { display: none; }
+    .section.active { display: block; }
+    h2 { font-size: 22px; margin-top: 20px; margin-bottom: 10px; }
+    .form-group { margin-bottom: 15px; }
+    label { display: block; margin-bottom: 6px; font-weight: bold; }
+    input[type="url"], input[type="text"], input[type="password"] {
+      width: 100%; padding: 8px; border: none; border-radius: 5px; font-size: 14px;
+    }
+    button {
+      padding: 10px 20px; background: #00b894; border: none;
+      color: white; border-radius: 5px; cursor: pointer; font-size: 16px; margin-top: 10px;
+    }
+    button:hover { background: #019875; }
+    .item-list { margin-top: 15px; }
+    .item {
+      background: #2b2b44; padding: 10px; border-radius: 6px; margin-bottom: 10px;
+    }
+    .item p { margin-bottom: 5px; }
+    .delete-btn {
+      background: none; border: none; color: red;
+      font-size: 18px; cursor: pointer;
+    }
+    .delete-btn:hover { color: #ff6b6b; }
+    .switch-container { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+    .stats-summary {
+      margin-top: 20px; display: flex; gap: 20px; flex-wrap: wrap;
+    }
+    .stats-summary div {
+      flex: 1; background: #00b894; padding: 15px;
+      border-radius: 8px; text-align: center;
+    }
+    .account-list { margin-top: 20px; }
+    .account-item {
+      background: #2b2b44; padding: 10px; border-radius: 6px;
+      margin-bottom: 10px; position: relative;
+    }
+    .delete-account-btn {
+      position: absolute; top: 10px; right: 10px;
+      background: none; border: none; color: #e74c3c;
+      font-size: 18px; cursor: pointer;
+    }
+    .delete-account-btn:hover { color: #ff7675; }
+    .chat-list { margin-top: 20px; }
+    .chat-item {
+      background: #2b2b44; padding: 10px; border-radius: 6px;
+      margin-bottom: 10px; display: flex; align-items: center;
+      gap: 10px; cursor: pointer;
+    }
+    .chat-item img { width: 40px; height: 40px; border-radius: 50%; }
+    .chat-window {
+      margin-top: 20px; background: #2b2b44; padding: 10px; border-radius: 6px;
+    }
+    #chatMessages {
+      height: 200px; overflow-y: auto; background: #1a1a2f;
+      padding: 8px; margin-bottom: 10px;
+    }
+    #chatMessages div { margin-bottom: 6px; }
+    .back-btn {
+      margin-bottom: 10px; background: #00b894; border: none;
+      padding: 5px 10px; color: white; cursor: pointer; border-radius: 4px;
+    }
+    .login-overlay {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.9); z-index: 9999;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .login-box {
+      background: #151529; padding: 30px; border-radius: 10px;
+      box-shadow: 0 0 10px #000; text-align: center; width: 300px;
+    }
+    .login-box h2 { margin-bottom: 20px; }
+    .login-box input { margin-bottom: 15px; }
+    .login-box .error { color: red; margin-top: 10px; }
+
+    @media (max-width: 768px) {
+      .content { margin-left: 0; }
+      aside#sidebar {
+        position: absolute; transform: translateX(-100%);
+        transition: transform 0.3s ease;
+      }
+      aside#sidebar.show { transform: translateX(0); }
+      .menu-toggle { display: block; margin-left: auto; }
+    }
+  </style>
 </head>
 <body>
-<div class="login-overlay" id="loginOverlay">
-  <div class="login-box">
-    <h2>Login Admin</h2>
-    <input type="text" id="loginUser" placeholder="Username">
-    <input type="password" id="loginPass" placeholder="Password">
-    <button onclick="checkLogin()">Masuk</button>
-    <div class="error" id="loginError"></div>
+
+  <!-- Login Overlay -->
+  <div class="login-overlay" id="loginOverlay">
+    <div class="login-box">
+      <h2>Login Admin</h2>
+      <input type="text" id="loginUser" placeholder="Username">
+      <input type="password" id="loginPass" placeholder="Password">
+      <button onclick="checkLogin()">Masuk</button>
+      <div class="error" id="loginError"></div>
+    </div>
   </div>
+
+  <!-- Header -->
+  <header>
+    <button class="menu-toggle" onclick="toggleMenu()">
+      <i class="fa fa-bars"></i>
+    </button>
+  </header>
+
+  <!-- Sidebar -->
+  <aside id="sidebar">
+    <div class="logo">Admin Panel</div>
+    <nav>
+      <a href="#" onclick="showSection('status')"><i class="fa fa-toggle-on"></i> Status Website</a>
+      <a href="#" onclick="showSection('statistik')"><i class="fa fa-chart-line"></i> Statistik</a>
+      <a href="#" onclick="showSection('index')"><i class="fa fa-newspaper"></i> Index</a>
+      <a href="#" onclick="showSection('runningTextSection')"><i class="fa fa-font"></i> Dashboard</a>
+      <a href="#" onclick="showSection('toko')"><i class="fa fa-store"></i> Toko</a>
+      <a href="#" onclick="showSection('chats')">
+        <i class="fa fa-comments"></i> Chats
+        <span id="notifBadge" class="badge" style="display:none;">0</span>
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="content">
+
+    <!-- Status Website -->
+    <div id="status" class="section active">
+      <h2>Status Website</h2>
+      <div class="switch-container">
+        <label for="toggleStatus">Website Aktif</label>
+        <input type="checkbox" id="toggleStatus">
+      </div>
+    </div>
+
+    <!-- Statistik -->
+    <div id="statistik" class="section">
+      <h2>Statistik Akun</h2>
+      <canvas id="accountChart" height="100"></canvas>
+      <div class="stats-summary">
+        <div>Total Akun: <span id="totalAccounts">0</span></div>
+        <div>Akun Aktif: <span id="activeAccounts">0</span></div>
+        <div>Akun Nonaktif: <span id="inactiveAccounts">0</span></div>
+      </div>
+      <div class="account-list" id="accountList"></div>
+    </div>
+
+    <!-- Index -->
+    <div id="index" class="section">
+      <h2>Informasi Halaman Utama</h2>
+      <div class="form-group">
+        <label for="textInput">Teks (opsional):</label>
+        <input type="text" id="textInput">
+      </div>
+      <div class="form-group">
+        <label for="imageInput">URL Gambar (opsional):</label>
+        <input type="url" id="imageInput">
+      </div>
+      <div class="form-group">
+        <label for="videoInput">URL Video (opsional):</label>
+        <input type="url" id="videoInput">
+      </div>
+      <button onclick="addInfo()">Tambah Informasi</button>
+      <div class="item-list" id="infoList"></div>
+    </div>
+
+    <!-- Running Text -->
+    <div id="runningTextSection" class="section">
+      <h2>Teks Berjalan Dashboard</h2>
+      <input type="text" id="runningTextInput" placeholder="Tulis teks...">
+      <button onclick="saveRunningText()">Simpan</button>
+      <button style="background:#e74c3c" onclick="deleteRunningText()">Hapus</button>
+      <p id="runningNotif" hidden>Perubahan disimpan!</p>
+    </div>
+    
+    <div id="toko" class="section">
+  <h2>Tambah Produk Toko</h2>
+  <div class="form-group"><label for="gambarProduk">URL Gambar:</label><input type="url" id="gambarProduk"></div>
+  <div class="form-group"><label for="namaProduk">Nama Produk:</label><input type="text" id="namaProduk"></div>
+  <div class="form-group"><label for="deskripsiProduk">Deskripsi / Harga:</label><input type="text" id="deskripsiProduk"></div>
+  <div class="form-group"><label for="linkWhatsApp">Link WhatsApp:</label><input type="url" id="linkWhatsApp"></div>
+  <button onclick="tambahProduk()">Tambah Produk</button>
+  <div id="daftarProduk" class="item-list"></div>
 </div>
 
-<header>
-  <button class="menu-toggle" onclick="toggleMenu()">
-    <i class="fa fa-bars"></i>
-  </button>
-</header>
-<aside id="sidebar">
-  <div class="logo">Admin Panel</div>
-  <nav>
-    <a href="#" onclick="showSection('status')"><i class="fa fa-toggle-on"></i> Status Website</a>
-    <a href="#" onclick="showSection('statistik')"><i class="fa fa-chart-line"></i> Statistik</a>
-    <a href="#" onclick="showSection('index')"><i class="fa fa-newspaper"></i> Index</a>
-    <a href="#" onclick="showSection('runningTextSection')"><i class="fa fa-font"></i> Dashboard</a>
-    <a href="#" onclick="showSection('chats')">
-      <i class="fa fa-comments"></i> Chats <span id="notifBadge" class="badge" style="display:none;">0</span>
-    </a>
-  </nav>
-</aside>
-<div class="content">
-  <div id="status" class="section active">
-    <h2>Status Website</h2>
-    <div class="switch-container">
-      <label for="toggleStatus">Website Aktif</label>
-      <input type="checkbox" id="toggleStatus">
+    <!-- Chats -->
+    <div id="chats" class="section">
+      <h2>Pesan Pengguna</h2>
+      <div class="chat-list" id="chatList"></div>
+      <div class="chat-window" id="chatWindow" style="display:none;">
+        <button class="back-btn" onclick="closeChat()">Kembali</button>
+        <h3 id="chatTitle"></h3>
+        <div id="chatMessages"></div>
+        <input type="text" id="replyInput" placeholder="Balas...">
+        <button onclick="sendReply()">Kirim</button>
+      </div>
     </div>
   </div>
-  <div id="statistik" class="section">
-    <h2>Statistik Akun</h2>
-    <canvas id="accountChart" height="100"></canvas>
-    <div class="stats-summary">
-      <div>Total Akun: <span id="totalAccounts">0</span></div>
-      <div>Akun Aktif: <span id="activeAccounts">0</span></div>
-      <div>Akun Nonaktif: <span id="inactiveAccounts">0</span></div>
-    </div>
-    <div class="account-list" id="accountList"></div>
-  </div>
-  <div id="index" class="section">
-    <h2>Informasi Halaman Utama</h2>
-    <div class="form-group">
-      <label for="textInput">Teks (opsional):</label>
-      <input type="text" id="textInput">
-    </div>
-    <div class="form-group">
-      <label for="imageInput">URL Gambar (opsional):</label>
-      <input type="url" id="imageInput">
-    </div>
-    <div class="form-group">
-      <label for="videoInput">URL Video (opsional):</label>
-      <input type="url" id="videoInput">
-    </div>
-    <button onclick="addInfo()">Tambah Informasi</button>
-    <div class="item-list" id="infoList"></div>
-  </div>
-  <div id="runningTextSection" class="section">
-    <h2>Teks Berjalan Dashboard</h2>
-    <input type="text" id="runningTextInput" placeholder="Tulis teks...">
-    <button onclick="saveRunningText()">Simpan</button>
-    <button style="background:#e74c3c" onclick="deleteRunningText()">Hapus</button>
-    <p id="runningNotif" hidden>Perubahan disimpan!</p>
-  </div>
-  <div id="chats" class="section">
-    <h2>Pesan Pengguna</h2>
-    <div class="chat-list" id="chatList"></div>
-    <div class="chat-window" id="chatWindow" style="display:none;">
-      <button class="back-btn" onclick="closeChat()">Kembali</button>
-      <h3 id="chatTitle"></h3>
-      <div id="chatMessages"></div>
-      <input type="text" id="replyInput" placeholder="Balas...">
-      <button onclick="sendReply()">Kirim</button>
-    </div>
-  </div>
-</div>
-<script>
-function toggleMenu(){document.getElementById("sidebar").classList.toggle("show")}
-function showSection(id){document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active");if(id==="chats")updateNotifBadge(0)}
-const toggleStatus=document.getElementById("toggleStatus");
-toggleStatus.checked=localStorage.getItem("websiteStatus")!=="off";
-toggleStatus.onchange=()=>localStorage.setItem("websiteStatus",toggleStatus.checked?"on":"off");
 
-function addInfo(){const text=textInput.value.trim(),image=imageInput.value.trim(),video=videoInput.value.trim();
-if(!text&&!image&&!video)return;
-const list=JSON.parse(localStorage.getItem("homeInfoList")||"[]");
-list.push({text,image,video,waktu:new Date().toLocaleString()});
-localStorage.setItem("homeInfoList",JSON.stringify(list));
-showInfoList()}
-function showInfoList(){const list=JSON.parse(localStorage.getItem("homeInfoList")||"[]");
-infoList.innerHTML=list.map((item,i)=>`<div class="item"><p><b>Teks:</b> ${item.text||"-"}</p><p><b>Gambar:</b> ${item.image||"-"}</p><p><b>Video:</b> ${item.video||"-"}</p><p><i>${item.waktu}</i></p><button class="delete-btn" onclick="deleteInfo(${i})"><i class="fa fa-trash"></i></button></div>`).join("")}
-function deleteInfo(i){const list=JSON.parse(localStorage.getItem("homeInfoList")||"[]");list.splice(i,1);localStorage.setItem("homeInfoList",JSON.stringify(list));showInfoList()}
+  <!-- Script -->
+  <script>
+    function toggleMenu() {
+      document.getElementById("sidebar").classList.toggle("show");
+    }
 
-function showStatistics(){
-  const users=JSON.parse(localStorage.getItem("usersData")||"[]");
-  totalAccounts.textContent=users.length;
-  activeAccounts.textContent=users.filter(u=>u.status==="active").length;
-  inactiveAccounts.textContent=users.length-activeAccounts.textContent;
-  new Chart(accountChart,{type:"line",data:{labels:users.map((u,i)=>"Akun "+(i+1)),datasets:[{label:"Aktif=1 Nonaktif=0",data:users.map(u=>u.status==="active"?1:0),borderColor:"#00b894",fill:false}]},options:{scales:{y:{beginAtZero:true,max:1}}}});
-  accountList.innerHTML=users.map((u,i)=>`<div class="account-item"><p><b>Akun ${i+1}</b></p><p>Username: ${u.username}</p><p>Password: ${u.password}</p><p>Status: ${u.status}</p><button class="delete-account-btn" onclick="deleteAccount(${i})"><i class="fa fa-user-slash"></i></button></div>`).join("");
+    function showSection(id) {
+      document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+      if (id === "chats") updateNotifBadge(0);
+    }
+
+    const toggleStatus = document.getElementById("toggleStatus");
+    toggleStatus.checked = localStorage.getItem("websiteStatus") !== "off";
+    toggleStatus.onchange = () => localStorage.setItem("websiteStatus", toggleStatus.checked ? "on" : "off");
+
+    function addInfo() {
+      const text = textInput.value.trim(),
+            image = imageInput.value.trim(),
+            video = videoInput.value.trim();
+      if (!text && !image && !video) return;
+      const list = JSON.parse(localStorage.getItem("homeInfoList") || "[]");
+      list.push({ text, image, video, waktu: new Date().toLocaleString() });
+      localStorage.setItem("homeInfoList", JSON.stringify(list));
+      showInfoList();
+    }
+
+    function showInfoList() {
+      const list = JSON.parse(localStorage.getItem("homeInfoList") || "[]");
+      infoList.innerHTML = list.map((item, i) => `
+        <div class="item">
+          <p><b>Teks:</b> ${item.text || "-"}</p>
+          <p><b>Gambar:</b> ${item.image || "-"}</p>
+          <p><b>Video:</b> ${item.video || "-"}</p>
+          <p><i>${item.waktu}</i></p>
+          <button class="delete-btn" onclick="deleteInfo(${i})"><i class="fa fa-trash"></i></button>
+        </div>`).join("");
+    }
+
+    function deleteInfo(i) {
+      const list = JSON.parse(localStorage.getItem("homeInfoList") || "[]");
+      list.splice(i, 1);
+      localStorage.setItem("homeInfoList", JSON.stringify(list));
+      showInfoList();
+    }
+
+    function showStatistics() {
+      const users = JSON.parse(localStorage.getItem("usersData") || "[]");
+      totalAccounts.textContent = users.length;
+      activeAccounts.textContent = users.filter(u => u.status === "active").length;
+      inactiveAccounts.textContent = users.length - activeAccounts.textContent;
+      new Chart(accountChart, {
+        type: "line",
+        data: {
+          labels: users.map((u, i) => "Akun " + (i + 1)),
+          datasets: [{
+            label: "Aktif=1 Nonaktif=0",
+            data: users.map(u => u.status === "active" ? 1 : 0),
+            borderColor: "#00b894", fill: false
+          }]
+        },
+        options: { scales: { y: { beginAtZero: true, max: 1 } } }
+      });
+      accountList.innerHTML = users.map((u, i) => `
+        <div class="account-item">
+          <p><b>Akun ${i + 1}</b></p>
+          <p>Username: ${u.username}</p>
+          <p>Password: ${u.password}</p>
+          <p>Status: ${u.status}</p>
+          <button class="delete-account-btn" onclick="deleteAccount(${i})">
+            <i class="fa fa-user-slash"></i>
+          </button>
+        </div>`).join("");
+    }
+
+    function deleteAccount(i) {
+      if (!confirm("Yakin ingin menghapus akun ini?")) return;
+      const uarr = JSON.parse(localStorage.getItem("usersData") || "[]");
+      uarr.splice(i, 1);
+      localStorage.setItem("usersData", JSON.stringify(uarr));
+      showStatistics();
+    }
+
+    function saveRunningText() {
+      localStorage.setItem("runningText", runningTextInput.value.trim());
+      runningNotif.hidden = false;
+      setTimeout(() => runningNotif.hidden = true, 2000);
+    }
+
+    function deleteRunningText() {
+      localStorage.removeItem("runningText");
+      runningTextInput.value = "";
+    }
+
+    function loadChats() {
+      const chats = JSON.parse(localStorage.getItem("userChats") || "{}");
+      chatList.innerHTML = Object.keys(chats).map(u => `
+        <div class="chat-item" onclick="openChat('${u}')">
+          <img src="https://via.placeholder.com/40" alt="Foto">
+          <div>${u}</div>
+        </div>`).join("");
+      updateNotifBadge(Object.keys(chats).length);
+    }
+
+    function updateNotifBadge(c) {
+      const b = document.getElementById("notifBadge");
+      b.textContent = c;
+      b.style.display = c > 0 ? "inline-block" : "none";
+    }
+
+    function openChat(user) {
+      const c = JSON.parse(localStorage.getItem("userChats") || "{}");
+      chatTitle.textContent = "Chat dengan " + user;
+      chatWindow.style.display = "block";
+      chatWindow.dataset.user = user;
+      chatMessages.innerHTML = (c[user] || []).map(m => `
+        <div><b>${m.from}:</b> ${m.text}</div>`).join("");
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function closeChat() {
+      chatWindow.style.display = "none";
+    }
+
+    function sendReply() {
+      const user = chatWindow.dataset.user,
+            msg = replyInput.value.trim();
+      if (!msg) return;
+      const c = JSON.parse(localStorage.getItem("userChats") || "{}");
+      c[user] = c[user] || [];
+      c[user].push({ from: "Admin", text: msg });
+      localStorage.setItem("userChats", JSON.stringify(c));
+      openChat(user);
+    }
+
+    function checkLogin() {
+      const u = loginUser.value.trim(),
+            p = loginPass.value.trim();
+      if (u === "kael" && p === "kael1612") {
+        localStorage.setItem("adminLoggedIn", "true");
+        document.getElementById("loginOverlay").style.display = "none";
+      } else {
+        document.getElementById("loginError").innerText = "Username atau Password salah!";
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      if (localStorage.getItem("adminLoggedIn") === "true") {
+        document.getElementById("loginOverlay").style.display = "none";
+      }
+      showInfoList();
+      showStatistics();
+      runningTextInput.value = localStorage.getItem("runningText") || "";
+      loadChats();
+    });
+    
+    function tambahProduk(){
+  const gambar = document.getElementById("gambarProduk").value.trim();
+  const nama = document.getElementById("namaProduk").value.trim();
+  const deskripsi = document.getElementById("deskripsiProduk").value.trim();
+  const wa = document.getElementById("linkWhatsApp").value.trim();
+  if(!gambar || !nama || !deskripsi || !wa) return alert("Semua kolom wajib diisi!");
+
+  let nomor = wa.startsWith("08") ? "62" + wa.slice(1) : wa;
+  nomor = nomor.replace(/[^0-9]/g, ""); // Hanya angka
+
+  const produk = JSON.parse(localStorage.getItem("produkToko") || "[]");
+  produk.push({ gambar, nama, deskripsi, wa: nomor, waktu: new Date().toLocaleString() });
+  localStorage.setItem("produkToko", JSON.stringify(produk));
+  tampilkanProduk();
+
+  document.getElementById("gambarProduk").value = "";
+  document.getElementById("namaProduk").value = "";
+  document.getElementById("deskripsiProduk").value = "";
+  document.getElementById("linkWhatsApp").value = "";
 }
-function deleteAccount(i){
-  if(!confirm("Yakin ingin menghapus akun ini?"))return;
-  const uarr=JSON.parse(localStorage.getItem("usersData")||"[]");
-  uarr.splice(i,1);
-  localStorage.setItem("usersData",JSON.stringify(uarr));
-  totalAccounts.textContent=uarr.length;
-  activeAccounts.textContent=uarr.filter(u=>u.status==="active").length;
-  inactiveAccounts.textContent=uarr.length - activeAccounts.textContent;
-  const items=document.querySelectorAll(".account-item");
-  if(items[i]) items[i].remove();
+
+function tampilkanProduk(){
+  const daftar = document.getElementById("daftarProduk");
+  const list = JSON.parse(localStorage.getItem("produkToko") || "[]");
+  if(list.length === 0){
+    daftar.innerHTML = "<p>Belum ada produk.</p>";
+    return;
+  }
+
+  daftar.innerHTML = list.map((p, i) => {
+    const pesan = encodeURIComponent(
+      `Haii admin! Saya ingin membeli produk anda.\n\n` +
+      `🛍️ *NAMA PRODUK:* ${p.nama}\n` +
+      `💰 *HARGA:* ${p.deskripsi}\n\n` +
+      `📷 Gambar: ${p.gambar}\n\n` +
+      `Mohon tunggu sampai admin membalas chat anda.`
+    );
+    const linkWA = `https://wa.me/${p.wa}?text=${pesan}`;
+    
+    return `
+      <div style="border:1px solid #ccc;padding:10px;margin:10px 0;border-radius:8px;">
+        <img src="${p.gambar}" alt="${p.nama}" style="max-width:100px;border-radius:8px;">
+        <h4>${p.nama}</h4>
+        <p>${p.deskripsi}</p>
+        <a href="${linkWA}" target="_blank">Beli via WhatsApp</a><br>
+        <small><i>${p.waktu}</i></small><br>
+        <button onclick="hapusProduk(${i})">Hapus</button>
+      </div>
+    `;
+  }).join("");
 }
 
-function saveRunningText(){localStorage.setItem("runningText",runningTextInput.value.trim());runningNotif.hidden=false;setTimeout(()=>runningNotif.hidden=true,2000)}
-function deleteRunningText(){localStorage.removeItem("runningText");runningTextInput.value=""}
-function loadChats(){const chats=JSON.parse(localStorage.getItem("userChats")||"{}");chatList.innerHTML=Object.keys(chats).map(u=>`<div class="chat-item" onclick="openChat('${u}')"><img src="https://via.placeholder.com/40" alt="Foto"><div>${u}</div></div>`).join("");updateNotifBadge(Object.keys(chats).length)}
-function updateNotifBadge(c){const b=document.getElementById("notifBadge");b.textContent=c;b.style.display=c>0?"inline-block":"none"}
-function openChat(user){const c=JSON.parse(localStorage.getItem("userChats")||"{}");chatTitle.textContent="Chat dengan "+user;chatWindow.style.display="block";chatWindow.dataset.user=user;chatMessages.innerHTML=(c[user]||[]).map(m=>`<div><b>${m.from}:</b> ${m.text}</div>`).join("");chatMessages.scrollTop=chatMessages.scrollHeight}
-function closeChat(){chatWindow.style.display="none"}
-function sendReply(){const user=chatWindow.dataset.user,msg=replyInput.value.trim();if(!msg)return;const c=JSON.parse(localStorage.getItem("userChats")||"{}");c[user]=c[user]||[];c[user].push({from:"Admin",text:msg});localStorage.setItem("userChats",JSON.stringify(c));openChat(user)}
-function checkLogin(){const u=loginUser.value.trim(),p=loginPass.value.trim();if(u==="kael"&&p==="kael1612"){localStorage.setItem("adminLoggedIn","true");document.getElementById("loginOverlay").style.display="none"}else document.getElementById("loginError").innerText="Username atau Password salah!"}
-document.addEventListener("DOMContentLoaded",()=>{
-  if(localStorage.getItem("adminLoggedIn")==="true")document.getElementById("loginOverlay").style.display="none";
-  showInfoList();
-  showStatistics();
-  runningTextInput.value=localStorage.getItem("runningText")||"";
-  loadChats();
-});
-</script>
-</body></html>
+function hapusProduk(index){
+  const list = JSON.parse(localStorage.getItem("produkToko") || "[]");
+  if(confirm("Yakin ingin menghapus produk ini?")){
+    list.splice(index, 1);
+    localStorage.setItem("produkToko", JSON.stringify(list));
+    tampilkanProduk();
+  }
+}
+
+document.addEventListener("DOMContentLoaded", tampilkanProduk);
+  </script>
+</body>
+</html>
