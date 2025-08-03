@@ -217,21 +217,21 @@
     const waLink = `https://wa.me/${noAdmin}?text=${pesan}`;
 
     return `
-      <div class="product-card">
-        <img src="${p.gambar}" alt="${p.nama}">
-        <div class="info">
-          <h4>${p.nama}</h4>
-          <p>${p.deskripsi}</p>
-          <a href="${waLink}" target="_blank" class="buy-button">Beli</a>
-        </div>
-        <div class="cart-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1.3 6.4A1 1 0 007 21h10a1 1 0 001-1.2L16.9 13M9 6h6"
-                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor"/>
-          </svg>
-        </div>
-      </div>
-    `;
+  <div class="product-card" onclick='lihatDetail(${JSON.stringify(p)})'>
+    <img src="${p.gambar}" alt="${p.nama}">
+    <div class="info">
+      <h4>${p.nama}</h4>
+      <p>${p.deskripsi}</p>
+      <a href="${waLink}" target="_blank" class="buy-button" onclick="event.stopPropagation()">Beli</a>
+    </div>
+    <div class="cart-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1.3 6.4A1 1 0 007 21h10a1 1 0 001-1.2L16.9 13M9 6h6"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor"/>
+      </svg>
+    </div>
+  </div>
+`;
   }).join("");
 }
 
@@ -244,6 +244,11 @@ document.getElementById("searchInput").addEventListener("input", function () {
 });
 
 renderProduk();
+
+function lihatDetail(produk) {
+  localStorage.setItem("produkDetail", JSON.stringify(produk));
+  window.location.href = "detail.html";
+}
 </script>
 
 </body>

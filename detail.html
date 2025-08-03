@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Detail Produk</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #3b82f6; /* Warna biru dari shop.html */
+      --danger: #ef4444;
+      --bg-light: #f9fafb;
+      --text-dark: #111827;
+      --text-gray: #6b7280;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-light);
+      color: var(--text-dark);
+      padding-bottom: 5rem;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      background: white;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+      border-radius: 0 0 16px 16px;
+      overflow: hidden;
+    }
+
+    .image-wrapper {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      background-color: #e5e7eb;
+    }
+
+    .product-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .content {
+      padding: 1.25rem;
+    }
+
+    .title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .price {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary); /* diganti ke biru */
+      margin-bottom: 0.25rem;
+    }
+
+    .terjual {
+      font-size: 0.9rem;
+      color: var(--text-gray);
+      margin-bottom: 0.75rem;
+    }
+
+    .desc {
+      font-size: 0.95rem;
+      color: var(--text-gray);
+      margin-bottom: 1.25rem;
+      line-height: 1.5;
+    }
+
+    .info-box {
+      font-size: 0.875rem;
+      background: #f3f4f6;
+      padding: 1rem;
+      border-radius: 12px;
+      color: #374151;
+      margin-bottom: 1.5rem;
+    }
+
+    .buy-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      margin: 0 auto;
+      width: 100%;
+      max-width: 480px;
+      background: #ffffff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      border-top: 1px solid #e5e7eb;
+      box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+      z-index: 10;
+    }
+
+    .cart-btn,
+    .buy-btn {
+      flex: 1;
+      text-align: center;
+      font-weight: 600;
+      padding: 0.75rem 1.25rem;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: background 0.3s ease;
+    }
+
+    .cart-btn {
+      background: #f3f4f6;
+      color: var(--text-dark);
+      margin-right: 0.5rem;
+    }
+
+    .cart-btn:hover {
+      background: #e5e7eb;
+    }
+
+    .buy-btn {
+      background: var(--primary);
+      color: white;
+      margin-left: 0.5rem;
+    }
+
+    .buy-btn:hover {
+      background: #2563eb;
+    }
+
+    @media (max-width: 480px) {
+      .title {
+        font-size: 1.2rem;
+      }
+
+      .price {
+        font-size: 1.3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="image-wrapper">
+      <img id="gambar" class="product-img" src="" alt="Produk">
+    </div>
+    <div class="content">
+      <div class="title" id="nama">Nama Produk</div>
+      <div class="price" id="harga">Rp0</div>
+      <div class="terjual" id="terjual">Terjual: 0x</div>
+      <div class="desc" id="deskripsi">Deskripsi produk...</div>
+      <div class="info-box">
+        Garansi: 7 hari &bull; Pengembalian diterima &bull; Pengiriman cepat
+      </div>
+    </div>
+  </div>
+
+  <div class="buy-bar">
+    <a href="#" class="cart-btn">Keranjang</a>
+    <a href="#" id="buyBtn" class="buy-btn" target="_blank">Beli Sekarang</a>
+  </div>
+
+  <script>
+    const produk = JSON.parse(localStorage.getItem("produkDetail"));
+    if (produk) {
+      document.getElementById("gambar").src = produk.gambar;
+      document.getElementById("nama").textContent = produk.nama;
+
+      const harga = produk.deskripsi.match(/(\d+[\.\d]*)/);
+      const formattedHarga = harga ? "Rp" + harga[0].replace(/\./g, ".") : produk.deskripsi;
+      document.getElementById("harga").textContent = formattedHarga;
+
+      document.getElementById("deskripsi").textContent = produk.deskripsi;
+
+      // Jumlah terjual
+      const keyTerjual = `terjual_${produk.nama}`;
+      let jumlahTerjual = parseInt(localStorage.getItem(keyTerjual)) || 0;
+      const terjualEl = document.getElementById("terjual");
+      terjualEl.textContent = `Terjual: ${jumlahTerjual}x`;
+
+      const noAdmin = produk.wa.replace(/^0/, "62").replace(/\D/g, "");
+      const pesan = `Haii admin! Saya ingin membeli produk anda.%0A%0A*GAMBAR:* ${produk.gambar}%0A*NAMA PRODUK:* ${produk.nama}%0A*HARGA:* ${produk.deskripsi}%0A%0AMohon tunggu sampai admin membalas chat anda.`;
+      const waLink = `https://wa.me/${noAdmin}?text=${pesan}`;
+
+      const buyBtn = document.getElementById("buyBtn");
+      buyBtn.href = waLink;
+
+      buyBtn.addEventListener("click", () => {
+        jumlahTerjual++;
+        localStorage.setItem(keyTerjual, jumlahTerjual);
+        terjualEl.textContent = `Terjual: ${jumlahTerjual}x`;
+      });
+    }
+  </script>
+
+</body>
+</html>
